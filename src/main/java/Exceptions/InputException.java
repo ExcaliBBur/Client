@@ -4,7 +4,7 @@ package Exceptions;
  * Represents user input errors.
  */
 public abstract class InputException extends Exception {
-    public String message;
+    private String message;
 
     public InputException() {
 
@@ -55,15 +55,30 @@ public abstract class InputException extends Exception {
         }
     }
 
-    public static class TooManeArgumentsException extends InputException {
-        public TooManeArgumentsException() {
-            super.message = "The entered command has to many arguments.";
+    /**
+     * Wrong arguments.
+     */
+    public static class ArgumentsException extends InputException {
+        public ArgumentsException() {
+            super.message = "Something is wrong with command arguments.";
         }
     }
 
+    /**
+     * No such command.
+     */
     public static class ThereIsNoSuchCommandException extends InputException {
         public ThereIsNoSuchCommandException() {
             super.message = "There is no such command.";
+        }
+    }
+
+    /**
+     * Server is unavailable.
+     */
+    public static class ServerUnavailableException extends InputException {
+        public ServerUnavailableException() {
+            super.message = "The server is unavailable.";
         }
     }
 }

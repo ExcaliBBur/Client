@@ -10,10 +10,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
 
+/**
+ * Class for working with various local or server commands.
+ */
 public class CommandManager {
     private final TreeMap<String, Command.CommandData> commands = new TreeMap<>();
     private final TreeMap<String, Command> clientCommands = new TreeMap<>();
 
+    /**
+     * Constructor, initialises server command data.
+     *
+     * @param commandData server command data
+     */
     public CommandManager(ArrayList<Command.CommandData> commandData) {
         commandData.forEach(x -> this.getCommands().put(x.getName(), x));
         this.setClientCommands();
@@ -36,6 +44,9 @@ public class CommandManager {
         this.getClientCommands().put("exit", new Exit());
     }
 
+    /**
+     * Help command realization with additional data.
+     */
     public class Help extends Command {
         public Help() {
             super("help", Argument.NONE, Argument.NONE, "displays a description of all " +
@@ -50,6 +61,9 @@ public class CommandManager {
         }
     }
 
+    /**
+     * ExecuteScript command realization with additional data.
+     */
     public static class ExecuteScript extends Command {
         public ExecuteScript() {
             super("execute_script", Argument.STRING, Argument.NONE, "Starts the script execution");
@@ -57,16 +71,19 @@ public class CommandManager {
 
         public String doOption(String arguments) {
             try {
-                String[] commands = new TextReader().readFile(new File(arguments)).split("\n");
+                String[] commands = TextReader.readFile(new File(arguments)).split("\n");
 
                 Arrays.stream(commands).forEach(command -> OperationManager.getQueue().add(command));
-            } catch (IOException e) {
-                System.out.println("There is no such file.");;
+            } catch (NullPointerException | IOException e) {
+                System.out.println("There is no such file.");
             }
             return "";
         }
     }
 
+    /**
+     * Exit command realization with additional data.
+     */
     public static class Exit extends Command {
         public Exit() {
             super("exit", Argument.NONE, Argument.NONE, "Ends the execution" +
