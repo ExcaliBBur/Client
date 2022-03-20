@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
  * Class whose objects are contained in the collection.
  */
 public class City extends Collectables {
+    private Human governor;
     private Coordinates coordinates;
     private Integer area;
     private Integer population;
@@ -14,7 +15,7 @@ public class City extends Collectables {
     private Climate climate;
     private Government government;
     private StandardOfLiving standardOfLiving;
-    private Human governor;
+
 
     public City() {
 
