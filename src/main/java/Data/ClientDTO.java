@@ -1,54 +1,47 @@
 package Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-/**
- * Data transfer class.
- */
-public class Response implements Serializable {
-    private final String path;
-    private final ArrayList<Command.CommandData> commandData;
-    private final String message;
-    private final boolean isRequest;
-    private final boolean isFail;
+public class ClientDTO implements Serializable {
+    private String path;
+    private Command.CommandData commandData;
+    private boolean isRequest;
+    private User user;
 
-    /**
-     * Constructor, gets all necessary things.
-     *
-     * @param path        path to file
-     * @param commandData all necessary command data
-     * @param message    message
-     * @param isRequest   shows that someone need some data back
-     * @param isFail      shows that something goes wrong
-     */
-    public Response(String path, ArrayList<Command.CommandData> commandData, String message, boolean isRequest,
-                    boolean isFail) {
+    public ClientDTO( String path, Command.CommandData commandData, boolean isRequest, User user) {
         this.path = path;
         this.commandData = commandData;
-        this.message = message;
         this.isRequest = isRequest;
-        this.isFail = isFail;
+        this.user = user;
     }
 
-    public ArrayList<Command.CommandData> getCommandData() {
-        return commandData;
+    public ClientDTO(Command.CommandData commandData, User user) {
+        this.commandData = commandData;
+        this.user = user;
+    }
+
+    public ClientDTO(boolean isRequest) {
+        this.isRequest = isRequest;
+    }
+
+    public ClientDTO(String path) {
+        this.path = path;
     }
 
     public String getPath() {
         return path;
     }
 
-    public String getMessage() {
-        return message;
+    public Command.CommandData getCommandData() {
+        return commandData;
     }
 
     public boolean isRequest() {
         return isRequest;
     }
 
-    public boolean isFail() {
-        return isFail;
+    public User getUser() {
+        return user;
     }
 
     /**

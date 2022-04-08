@@ -5,11 +5,11 @@ import Exceptions.InputException;
 import Interaction.Parser;
 import Interaction.Receiver;
 import Interaction.Sender;
+import Interfaces.IFormer;
 import Processing.*;
 
 import java.io.*;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.Objects;
@@ -24,35 +24,41 @@ public class Client {
     public static void main(String[] args) {
         Registrator registrator = new Registrator(new Scanner(System.in));
         try (DatagramSocket socket = registrator.register()) {
-            InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getByName("localhost"), 6666);
+            InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", 6666);
 
             Sender sender = new Sender(socket);
             Receiver receiver = new Receiver(socket);
             OperationManager operationManager = new OperationManager(new Scanner(System.in));
 
-            System.out.println("Type something to start.");
-            sender.sendResponse(Parser.parseTo(new Response(operationManager.getLine(),
-                    null, null, true, false)), inetSocketAddress);
+            sender.sendResponse(Parser.parseTo(new ClientDTO(true)), inetSocketAddress);
 
-            Response response = (Response) Objects.requireNonNull(Parser.parseFrom(receiver.getResponse()));
-            System.out.println(response.getMessage());
-            boolean isRequested = response.isRequest();
-            CommandManager commandManager = new CommandManager(response.getCommandData());
+            ServerDTO serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver.getResponse()));
+            System.out.println(serverDTO.getMessage());
+            boolean isRequested = serverDTO.isRequest();
+            CommandManager commandManager = new CommandManager(serverDTO.getCommandData());
 
             CityFormer cityFormer = new CityFormer(operationManager);
-            Executioner<City> executioner = new Executioner<>(cityFormer, commandManager);
+            IFormer<User> userFormer = new UserFormer(operationManager);
+            Executioner<City> executioner = new Executioner<>(userFormer, cityFormer, commandManager);
 
             while (!Client.isFinished()) {
                 try {
-                    response = executioner.execute(operationManager.getLine(), isRequested);
-                    if (response != null) {
-                        sender.sendResponse(Parser.parseTo(response), inetSocketAddress);
-                        response = (Response) Objects.requireNonNull(Parser.parseFrom(receiver
+                    ClientDTO clientDTO = executioner.execute(operationManager.getLine(), isRequested);
+                    if (clientDTO != null) {
+                        sender.sendResponse(Parser.parseTo(clientDTO), inetSocketAddress);
+                        serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
                                 .getResponse()));
-                        System.out.println(response.getMessage());
-                        isRequested = response.isRequest();
+                        System.out.println(serverDTO.getMessage());
+                        isRequested = serverDTO.isRequest();
 
-                        if (response.isFail()) {
+                        if (executioner.getUserToCheck() != null) {
+                            if (serverDTO.isSuccess()) {
+                                executioner.setConfirmedUser(executioner.getUserToCheck());
+                            }
+                            executioner.setUserToCheck(null);
+                        }
+
+                        if (serverDTO.isFail()) {
                             System.out.println("Try again with restarting the program.");
                             break;
                         }

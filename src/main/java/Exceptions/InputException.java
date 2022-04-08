@@ -81,4 +81,10 @@ public abstract class InputException extends Exception {
             super.message = "The server is unavailable.";
         }
     }
+
+    public static class NotAuthorizedException extends InputException {
+        public NotAuthorizedException() {
+            super.message = "You can't send commands to the server, log in or register.";
+        }
+    }
 }

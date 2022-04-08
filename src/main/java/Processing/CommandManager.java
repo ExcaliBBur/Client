@@ -3,9 +3,11 @@ package Processing;
 import Data.Command;
 import Main.Client;
 import Utilities.TextReader;
+import org.reflections.Reflections;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -15,7 +17,7 @@ import java.util.TreeMap;
  */
 public class CommandManager {
     private final TreeMap<String, Command.CommandData> commands = new TreeMap<>();
-    private final TreeMap<String, Command> clientCommands = new TreeMap<>();
+    private final TreeMap<String, Command> clientCommands;
 
     /**
      * Constructor, initialises server command data.
@@ -24,7 +26,7 @@ public class CommandManager {
      */
     public CommandManager(ArrayList<Command.CommandData> commandData) {
         commandData.forEach(x -> this.getCommands().put(x.getName(), x));
-        this.setClientCommands();
+        this.clientCommands = setClientCommands();
         this.getClientCommands().forEach((x, y) -> this.getCommands().put(y.getName(),
                 new Command.CommandData(y.getName(), y.getFirstArgument()
                         + " " + y.getSecondArgument(), y.getDescription())));
@@ -38,10 +40,26 @@ public class CommandManager {
         return clientCommands;
     }
 
-    public void setClientCommands() {
-        this.getClientCommands().put("help", new Help());
-        this.getClientCommands().put("execute_script", new ExecuteScript());
-        this.getClientCommands().put("exit", new Exit());
+    public TreeMap<String, Command> setClientCommands() {
+        TreeMap<String, Command> treeMap = new TreeMap<>();
+
+        new Reflections().getSubTypesOf(Command.class).forEach(x -> {
+            Command command;
+            try {
+                try {
+                    command = x.getConstructor(CommandManager.class).newInstance(this);
+                    treeMap.put(command.getName(), command);
+                } catch (NoSuchMethodException e) {
+                    command = x.getConstructor().newInstance();
+                    treeMap.put(command.getName(), command);
+                }
+            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                    InstantiationException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return treeMap;
     }
 
     /**

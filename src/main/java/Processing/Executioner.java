@@ -1,15 +1,10 @@
 package Processing;
 
-import Data.Collectables;
-import Data.Command;
-import Data.Response;
+import Data.*;
 import Interfaces.IFormer;
 import Exceptions.InputException;
 import Utilities.Serializer;
 import Utilities.Validator;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Class to form response.
@@ -17,6 +12,10 @@ import java.util.Collections;
  * @param <T> type of objects to work with
  */
 public class Executioner<T extends Collectables> {
+    private User userToCheck;
+    private User confirmedUser;
+
+    private final IFormer<User> userFormer;
     private final IFormer<T> iFormer;
     private final CommandManager commandManager;
 
@@ -26,7 +25,8 @@ public class Executioner<T extends Collectables> {
      * @param iFormer        object former
      * @param commandManager command data
      */
-    public Executioner(IFormer<T> iFormer, CommandManager commandManager) {
+    public Executioner(IFormer<User> userFormer, IFormer<T> iFormer, CommandManager commandManager) {
+        this.userFormer = userFormer;
         this.iFormer = iFormer;
         this.commandManager = commandManager;
     }
@@ -39,7 +39,7 @@ public class Executioner<T extends Collectables> {
      * @return response to send
      * @throws InputException caused by working with user input
      */
-    public Response execute(String line, boolean isRequest) throws InputException {
+    public ClientDTO execute(String line, boolean isRequest) throws InputException {
         String command;
         String arguments;
 
@@ -52,7 +52,7 @@ public class Executioner<T extends Collectables> {
         }
 
         if (isRequest) {
-            return new Response(line, null, null, false, false);
+            return new ClientDTO(line);
         } else {
             if (commandManager.getCommands().containsKey(command)) {
                 if (Validator.validate(this.getCommandManager().getCommands().get(command).getArgs(), arguments)) {
@@ -63,14 +63,21 @@ public class Executioner<T extends Collectables> {
                         String responseArguments = "";
                         if (this.getCommandManager().getCommands().get(command).getArgs().contains("OBJECT")) {
                             String object = Serializer.serialize(this.getIFormer().formObj());
-                            responseArguments = new Response.ArgumentFormer().formMessage(this.getCommandManager()
+                            responseArguments = new ClientDTO.ArgumentFormer().formMessage(this.getCommandManager()
                                     .getCommands().get(command).getArgs(), arguments, object);
+                        } else if (this.getCommandManager().getCommands().get(command).getArgs().contains("USER")) {
+                            this.setUserToCheck(userFormer.formObj());
+                            responseArguments = this.getUserToCheck().toString();
                         } else if (arguments != null) {
                             responseArguments = arguments;
                         }
-                        return new Response(null,
-                                new ArrayList<>(Collections.singletonList(new Command.CommandData(command,
-                                        responseArguments, null))), null, false, false);
+
+                        if (userToCheck != null || confirmedUser != null) {
+                            return new ClientDTO(new Command.CommandData(command,
+                                    responseArguments, null), confirmedUser);
+                        } else {
+                            throw new InputException.NotAuthorizedException();
+                        }
                     }
                 } else {
                     throw new InputException.ArgumentsException();
@@ -95,5 +102,17 @@ public class Executioner<T extends Collectables> {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public User getUserToCheck() {
+        return userToCheck;
+    }
+
+    public void setUserToCheck(User userToCheck) {
+        this.userToCheck = userToCheck;
+    }
+
+    public void setConfirmedUser(User confirmedUser) {
+        this.confirmedUser = confirmedUser;
     }
 }
