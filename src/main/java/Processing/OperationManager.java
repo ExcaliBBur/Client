@@ -27,7 +27,7 @@ public class OperationManager {
      */
     public String getLine() {
         if (getQueue().isEmpty()) {
-            return scanner.nextLine();
+            return scanner.nextLine().trim();
         }
         return getQueue().poll();
     }

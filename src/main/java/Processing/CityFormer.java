@@ -37,7 +37,7 @@ public class CityFormer implements IFormer<City> {
         do {
             repeat = false;
             try {
-                city.setInputName(getOperationManager().getLine());
+                city.setInputName(getOperationManager().getLine().replaceAll(" ", "_"));
             } catch (InputException e) {
                 System.out.println(e.getMessage());
                 repeat = true;
@@ -145,7 +145,8 @@ public class CityFormer implements IFormer<City> {
         do {
             repeat = false;
             try {
-                city.getGovernor().setInputHumanName(getOperationManager().getLine());
+                city.getGovernor().setInputHumanName(getOperationManager().getLine()
+                        .replaceAll(" ", "_"));
             } catch (InputException e) {
                 System.out.println(e.getMessage());
                 repeat = true;

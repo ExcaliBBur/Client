@@ -9,22 +9,18 @@ import java.util.Arrays;
  */
 public abstract class Command {
     private final String name;
-    private final Argument firstArgument;
-    private final Argument secondArgument;
+    private ArrayList<Argument> arguments;
     private final String description;
 
     /**
      * Constructor, gets all necessary thins.
      *
-     * @param name           command name
-     * @param firstArgument  first argument
-     * @param secondArgument second argument
-     * @param description    command description
+     * @param name        command name
+     * @param description command description
      */
-    public Command(String name, Argument firstArgument, Argument secondArgument, String description) {
+    public Command(String name, ArrayList<Argument> arguments, String description) {
         this.name = name;
-        this.firstArgument = firstArgument;
-        this.secondArgument = secondArgument;
+        this.arguments = arguments;
         this.description = description;
     }
 
@@ -32,12 +28,8 @@ public abstract class Command {
         return name;
     }
 
-    public Argument getFirstArgument() {
-        return firstArgument;
-    }
-
-    public Argument getSecondArgument() {
-        return secondArgument;
+    public ArrayList<Argument> getArguments() {
+        return arguments;
     }
 
     public String getDescription() {
@@ -59,7 +51,7 @@ public abstract class Command {
      * @param arguments input parameters
      * @return message
      */
-    public abstract String doOption(String arguments);
+    public abstract String doOption(ArrayList<String> arguments);
 
     @Override
     public String toString() {
@@ -73,7 +65,8 @@ public abstract class Command {
         NUMBER("number"),
         STRING("string"),
         NONE("none"),
-        OBJECT("object");
+        OBJECT("object"),
+        USER("user");
 
         private final String name;
 
@@ -91,25 +84,42 @@ public abstract class Command {
      */
     public static class CommandData implements Serializable {
         private final String name;
-        private final String args;
-        private final String description;
+        private ArrayList<Argument> args;
+        private String description;
+        private ArrayList<String> userArgs;
 
-        public CommandData(String name, String args, String description) {
+        public CommandData(String name, ArrayList<Argument> args, String description, ArrayList<String> userArgs) {
             this.name = name;
             this.args = args;
             this.description = description;
+            this.userArgs = userArgs;
+        }
+
+        public CommandData(String name, ArrayList<Argument> args, String description) {
+            this.name = name;
+            this.args = args;
+            this.description = description;
+        }
+
+        public CommandData(String name, ArrayList<String> userArgs) {
+            this.name = name;
+            this.userArgs = userArgs;
         }
 
         public String getName() {
             return name;
         }
 
-        public String getArgs() {
+        public ArrayList<Argument> getArgs() {
             return args;
         }
 
         public String getDescription() {
             return description;
+        }
+
+        public ArrayList<String> getUserArgs() {
+            return userArgs;
         }
 
         @Override

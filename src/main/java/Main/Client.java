@@ -34,7 +34,6 @@ public class Client {
 
             ServerDTO serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver.getResponse()));
             System.out.println(serverDTO.getMessage());
-            boolean isRequested = serverDTO.isRequest();
             CommandManager commandManager = new CommandManager(serverDTO.getCommandData());
 
             CityFormer cityFormer = new CityFormer(operationManager);
@@ -43,24 +42,18 @@ public class Client {
 
             while (!Client.isFinished()) {
                 try {
-                    ClientDTO clientDTO = executioner.execute(operationManager.getLine(), isRequested);
+                    ClientDTO clientDTO = executioner.execute(operationManager.getLine());
                     if (clientDTO != null) {
                         sender.sendResponse(Parser.parseTo(clientDTO), inetSocketAddress);
                         serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
                                 .getResponse()));
                         System.out.println(serverDTO.getMessage());
-                        isRequested = serverDTO.isRequest();
 
                         if (executioner.getUserToCheck() != null) {
                             if (serverDTO.isSuccess()) {
                                 executioner.setConfirmedUser(executioner.getUserToCheck());
                             }
                             executioner.setUserToCheck(null);
-                        }
-
-                        if (serverDTO.isFail()) {
-                            System.out.println("Try again with restarting the program.");
-                            break;
                         }
                     }
                 } catch (InputException e) {
@@ -71,6 +64,7 @@ public class Client {
             System.out.println(e.getMessage());
             System.out.println("Try again later with restarting the program.");
         } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
             System.out.println("The program is terminated due to an error.");
         }
     }

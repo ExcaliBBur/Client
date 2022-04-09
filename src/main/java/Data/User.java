@@ -2,7 +2,7 @@ package Data;
 
 import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     private String name;
     private String password;
 
@@ -34,5 +34,20 @@ public class User {
     @Override
     public String toString() {
         return name + "\n" + password;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
+
+        if (this.getClass() != object.getClass()) {
+            return false;
+        }
+
+        final User another = (User) object;
+
+        return ((this.getName().equals(another.getName())) && this.getPassword().equals(another.getPassword()));
     }
 }

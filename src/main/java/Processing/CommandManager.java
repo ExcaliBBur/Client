@@ -28,8 +28,7 @@ public class CommandManager {
         commandData.forEach(x -> this.getCommands().put(x.getName(), x));
         this.clientCommands = setClientCommands();
         this.getClientCommands().forEach((x, y) -> this.getCommands().put(y.getName(),
-                new Command.CommandData(y.getName(), y.getFirstArgument()
-                        + " " + y.getSecondArgument(), y.getDescription())));
+                new Command.CommandData(y.getName(), y.getArguments(), y.getDescription(), null)));
     }
 
     public TreeMap<String, Command.CommandData> getCommands() {
@@ -67,11 +66,11 @@ public class CommandManager {
      */
     public class Help extends Command {
         public Help() {
-            super("help", Argument.NONE, Argument.NONE, "displays a description of all " +
+            super("help", new ArrayList<>(), "displays a description of all " +
                     "commands available to the user");
         }
 
-        public String doOption(String arguments) {
+        public String doOption(ArrayList<String> arguments) {
             StringBuilder stringBuilder = new StringBuilder();
 
             CommandManager.this.getCommands().forEach((x, y) -> stringBuilder.append(y.toString()).append("\n"));
@@ -84,12 +83,13 @@ public class CommandManager {
      */
     public static class ExecuteScript extends Command {
         public ExecuteScript() {
-            super("execute_script", Argument.STRING, Argument.NONE, "Starts the script execution");
+            super("execute_script", new ArrayList<>(Arrays.asList(Argument.STRING)),
+                    "Starts the script execution");
         }
 
-        public String doOption(String arguments) {
+        public String doOption(ArrayList<String> arguments) {
             try {
-                String[] commands = TextReader.readFile(new File(arguments)).split("\n");
+                String[] commands = TextReader.readFile(new File(arguments.get(0))).split("\n");
 
                 Arrays.stream(commands).forEach(command -> OperationManager.getQueue().add(command));
             } catch (NullPointerException | IOException e) {
@@ -104,11 +104,11 @@ public class CommandManager {
      */
     public static class Exit extends Command {
         public Exit() {
-            super("exit", Argument.NONE, Argument.NONE, "Ends the execution" +
+            super("exit", new ArrayList<>(), "Ends the execution" +
                     " of the program");
         }
 
-        public String doOption(String arguments) {
+        public String doOption(ArrayList<String> arguments) {
             Client.setFinished(true);
 
             return "The execution of the program is completed";
