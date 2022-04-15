@@ -32,12 +32,21 @@ public class Client {
 
             sender.sendResponse(Parser.parseTo(new ClientDTO(true)), inetSocketAddress);
 
-            ServerDTO serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver.getResponse()));
-            System.out.println(serverDTO.getMessage());
+            ServerDTO serverDTO;
+            StringBuilder message = new StringBuilder();
+
+            do {
+                serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
+                        .getResponse()));
+                message.append(new String(serverDTO.getMessage()));
+            } while (!serverDTO.isTerminating());
+            System.out.println(message.toString().trim());
+            message.setLength(0);
+
             CommandManager commandManager = new CommandManager(serverDTO.getCommandData());
 
             CityFormer cityFormer = new CityFormer(operationManager);
-            IFormer<User> userFormer = new UserFormer(operationManager);
+            IFormer<User> userFormer = new UserFormer(operationManager, new HashPassword());
             Executioner<City> executioner = new Executioner<>(userFormer, cityFormer, commandManager);
 
             while (!Client.isFinished()) {
@@ -45,9 +54,14 @@ public class Client {
                     ClientDTO clientDTO = executioner.execute(operationManager.getLine());
                     if (clientDTO != null) {
                         sender.sendResponse(Parser.parseTo(clientDTO), inetSocketAddress);
-                        serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
-                                .getResponse()));
-                        System.out.println(serverDTO.getMessage());
+
+                        do {
+                            serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
+                                    .getResponse()));
+                            message.append(new String(serverDTO.getMessage()));
+                        } while (!serverDTO.isTerminating());
+                        System.out.println(message.toString().trim());
+                        message.setLength(0);
 
                         if (executioner.getUserToCheck() != null) {
                             if (serverDTO.isSuccess()) {

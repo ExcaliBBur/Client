@@ -2,12 +2,15 @@ package Processing;
 
 import Data.User;
 import Interfaces.IFormer;
+import Interfaces.IHasher;
 
 public class UserFormer implements IFormer<User> {
     private final OperationManager operationManager;
+    private IHasher hasher;
 
-    public UserFormer(OperationManager operationManager) {
+    public UserFormer(OperationManager operationManager, IHasher hasher) {
         this.operationManager = operationManager;
+        this.hasher = hasher;
     }
 
     @Override
@@ -18,12 +21,16 @@ public class UserFormer implements IFormer<User> {
         user.setName(this.operationManager.getLine());
 
         System.out.println("Enter users password.");
-        user.setPassword(this.operationManager.getLine());
+        user.setPassword(hasher.hash(this.operationManager.getLine()));
 
         return user;
     }
 
     public OperationManager getOperationManager() {
         return operationManager;
+    }
+
+    public void setHasher(IHasher hasher) {
+        this.hasher = hasher;
     }
 }
