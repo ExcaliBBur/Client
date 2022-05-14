@@ -23,7 +23,7 @@ import java.util.Scanner;
  */
 public class Client extends Application {
     private static boolean finished;
-
+// пакость.
     public static void main(String[] args) {
         Application.launch();
     }
