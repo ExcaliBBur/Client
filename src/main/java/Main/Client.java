@@ -1,5 +1,6 @@
 package Main;
 
+import Controllers.LoginScreenController;
 import Models.*;
 import Interaction.Parser;
 import Interaction.Receiver;
@@ -12,10 +13,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.*;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.URL;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -42,7 +42,18 @@ public class Client extends Application {
         URL xml = getClass().getResource("/LoginScreen.fxml");
         fxmlLoader.setLocation(xml);
 
-        primaryStage.setScene(new Scene(fxmlLoader.load()));
+        Registrator registrator = new Registrator(new Scanner(System.in));
+        Parent root = fxmlLoader.load();
+
+        LoginScreenController loginScreenController = fxmlLoader.getController();
+        fxmlLoader.setController(loginScreenController);
+        primaryStage.setScene(new Scene(root));
+
+        loginScreenController.setChannel(registrator.register());
+        loginScreenController.setListeners(new ArrayList<>(Arrays.asList(new
+                InetSocketAddress(InetAddress.getByName("localhost"), 6666))));
+        loginScreenController.setBase(new ArrayList<>());
+
         primaryStage.show();
     }
 

@@ -2,9 +2,9 @@ package Controllers;
 
 import Interaction.Parser;
 import Interaction.Sender;
-import Models.Command;
-import Models.User;
+import Models.*;
 import Realisation.ClientDTO;
+import Realisation.HashPassword;
 import Realisation.StorageListener;
 import Utilities.Serializer;
 import javafx.fxml.FXML;
@@ -13,16 +13,18 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.net.DatagramSocket;
-import java.net.SocketAddress;
+import java.io.IOException;
+import java.net.*;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 
 public class LoginScreenController {
     private DatagramSocket channel;
     private List<SocketAddress> listeners;
+    private List<City> base;
 
     @FXML
     //TODO Честно, не знаю пока, что там будет.
@@ -42,43 +44,57 @@ public class LoginScreenController {
 
     @FXML
     public void registration() {
-        byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData("register",
-                Arrays.asList(Serializer.serialize(new User(name.getText(), password.getText())))), true,
-                null));
-        this.getListeners().forEach(x -> Sender.sendResponse(this.getChannel(), data, x));
+        this.action("register");
     }
 
     @FXML
     public void log() {
-        byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData("login",
-                Arrays.asList(Serializer.serialize(new User(name.getText(), password.getText())))), true,
+        this.action("login");
+    }
+    //TODO ДОБАВИТЬ ПРОВЕРКУ НЕПУСТОГО ЛОГИНА
+
+    public void action(String command) {
+        ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+        User user = new User(name.getText(), new HashPassword().hash(password.getText()));
+        byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(command,
+                Arrays.asList(Serializer.serialize(user))), false,
                 null));
+
+        StorageListener listener = new StorageListener(channel, base, new LinkedList<>(), lock);
+        listener.start();
         this.getListeners().forEach(x -> Sender.sendResponse(this.getChannel(), data, x));
 
+        ServerDTO<City> answer = this.blockAuth(listener, lock);
 
+        if (answer.isSuccess()) {
+            loginButton.getScene().getWindow().hide();
+            this.changeScreen(user, base);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+
+            alert.setTitle("ERROR!");
+            alert.setHeaderText(null);
+            alert.setContentText("Dick!");
+            alert.showAndWait();
+
+            listener.interrupt();
+        }
     }
 
-    public void finishInitialization() {
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(new StorageListener());
-    }
+    private ServerDTO<City> blockAuth(StorageListener listener, ReentrantReadWriteLock lock) {
+        ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
+        ServerDTO<City> serverDTO;
+        do {
+            readLock.lock();
+            serverDTO = listener.getNextAnswer();
+            readLock.unlock();
+        } while (serverDTO == null);
 
-    public void setChannel(DatagramSocket channel) {
-        this.channel = channel;
+        return serverDTO;
     }
 
     public DatagramSocket getChannel() {
         return channel;
-    }
-
-    public void addListeners(SocketAddress... listeners) {
-        this.listeners.addAll(Arrays.asList(listeners));
-    }
-
-    //TODO ДОБАВИТЬ СЛУШАТЕЛЕЙ (СЕРВЕР) В МЕТОД start() класса Client
-
-    public void setListeners(List<SocketAddress> listeners) {
-        this.listeners = listeners;
     }
 
     public List<SocketAddress> getListeners() {

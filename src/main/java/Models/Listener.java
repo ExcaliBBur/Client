@@ -1,15 +1,15 @@
 package Models;
 
 import Interaction.Receiver;
-import javafx.collections.ObservableList;
 
 import java.net.DatagramSocket;
+import java.util.List;
 
-public abstract class Listener<T> implements Runnable {
+public abstract class Listener extends Thread {
     private final Receiver receiver;
-    private final ObservableList<T> collection;
+    private final List<City> collection;
 
-    public Listener(DatagramSocket channel, ObservableList<T> collection) {
+    public Listener(DatagramSocket channel, List<City> collection) {
         this.receiver = new Receiver(channel);
         this.collection = collection;
     }
@@ -18,7 +18,7 @@ public abstract class Listener<T> implements Runnable {
         return receiver;
     }
 
-    public ObservableList<T> getCollection() {
+    public List<City> getCollection() {
         return collection;
     }
 }
