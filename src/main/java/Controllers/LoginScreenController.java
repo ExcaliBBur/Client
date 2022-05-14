@@ -8,10 +8,10 @@ import Realisation.HashPassword;
 import Realisation.StorageListener;
 import Utilities.Serializer;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.*;
@@ -37,10 +37,10 @@ public class LoginScreenController {
     private PasswordField password;
 
     @FXML
-    private Button login;
+    private Button loginButton;
 
     @FXML
-    private Button register;
+    private Button registerButton;
 
     @FXML
     public void registration() {
@@ -99,5 +99,30 @@ public class LoginScreenController {
 
     public List<SocketAddress> getListeners() {
         return listeners;
+    }
+
+    public void changeScreen(User user, List<City> base) {
+        Stage secondStage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL xml = getClass().getResource("/MainScreen.fxml");
+        fxmlLoader.setLocation(xml);
+        try {
+            secondStage.setScene(new Scene(fxmlLoader.load()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        secondStage.show();
+    }
+
+    public void setListeners(List<SocketAddress> listeners) {
+        this.listeners = listeners;
+    }
+
+    public void setChannel(DatagramSocket channel) {
+        this.channel = channel;
+    }
+
+    public void setBase(List<City> base) {
+        this.base = base;
     }
 }
