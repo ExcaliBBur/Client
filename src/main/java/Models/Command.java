@@ -1,15 +1,16 @@
-package Data;
+package Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Represents all specified classes with unique purposes.
  */
 public abstract class Command {
     private final String name;
-    private ArrayList<Argument> arguments;
+    private List<Argument> arguments;
     private final String description;
 
     /**
@@ -28,7 +29,7 @@ public abstract class Command {
         return name;
     }
 
-    public ArrayList<Argument> getArguments() {
+    public List<Argument> getArguments() {
         return arguments;
     }
 
@@ -84,24 +85,24 @@ public abstract class Command {
      */
     public static class CommandData implements Serializable {
         private final String name;
-        private ArrayList<Argument> args;
+        private List<Argument> args;
         private String description;
-        private ArrayList<String> userArgs;
+        private List<String> userArgs;
 
-        public CommandData(String name, ArrayList<Argument> args, String description, ArrayList<String> userArgs) {
+        public CommandData(String name, List<Argument> args, String description, List<String> userArgs) {
             this.name = name;
             this.args = args;
             this.description = description;
             this.userArgs = userArgs;
         }
 
-        public CommandData(String name, ArrayList<Argument> args, String description) {
+        public CommandData(String name, List<Argument> args, String description) {
             this.name = name;
             this.args = args;
             this.description = description;
         }
 
-        public CommandData(String name, ArrayList<String> userArgs) {
+        public CommandData(String name, List<String> userArgs) {
             this.name = name;
             this.userArgs = userArgs;
         }
@@ -110,7 +111,7 @@ public abstract class Command {
             return name;
         }
 
-        public ArrayList<Argument> getArgs() {
+        public List<Argument> getArgs() {
             return args;
         }
 
@@ -118,7 +119,7 @@ public abstract class Command {
             return description;
         }
 
-        public ArrayList<String> getUserArgs() {
+        public List<String> getUserArgs() {
             return userArgs;
         }
 

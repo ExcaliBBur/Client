@@ -1,9 +1,9 @@
 package Utilities;
 
-import Data.Command;
+import Models.Command;
 import Exceptions.InputException;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for validating data.
@@ -16,7 +16,7 @@ public class Validator {
      * @return result of compare
      * @throws InputException caused by incorrect input
      */
-    public static boolean validate(ArrayList<Command.Argument> requirements, ArrayList<String> arguments)
+    public static boolean validate(List<Command.Argument> requirements, List<String> arguments)
             throws InputException {
         if (requirements.size() == 0 && arguments == null) {
             return true;

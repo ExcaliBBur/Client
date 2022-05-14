@@ -1,21 +1,27 @@
-package Data;
+package Models;
 
 import Exceptions.InputException;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import javassist.SerialVersionUID;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Class whose objects are contained in the collection.
  */
-public class City extends Collectables {
-    private Human governor;
+public class City extends Collectables implements Serializable {
     private Coordinates coordinates;
+    private java.time.LocalDateTime creationDate;
     private Integer area;
     private Integer population;
     private int meters;
     private Climate climate;
     private Government government;
     private StandardOfLiving standardOfLiving;
+    private Human governor;
 
+    public static final long serialVersionUID = 42L;
 
     public City() {
 
@@ -34,11 +40,12 @@ public class City extends Collectables {
      * @param standardOfLiving current standard of living
      * @param governor         current governor
      */
-    public City(String name, Coordinates coordinates, Integer area,
+    public City(int id, String name, Coordinates coordinates, java.time.LocalDateTime creationDate, Integer area,
                 Integer population, int meters, Climate climate, Government government,
                 StandardOfLiving standardOfLiving, Human governor) {
-        super(name);
+        super(id, name);
         this.coordinates = coordinates;
+        this.creationDate = creationDate;
         this.area = area;
         this.population = population;
         this.meters = meters;
@@ -436,10 +443,16 @@ public class City extends Collectables {
         return stringBuilder.toString();
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
     /**
      * Represents combination of Data.City coordinates.
      */
-    public static class Coordinates {
+    public static class Coordinates implements Serializable {
+        static final long serialVersionUID = 42L;
+
         private Double firstCoordinates;
         private Float secondCoordinates;
 
@@ -543,7 +556,9 @@ public class City extends Collectables {
     /**
      * Description of the governor.
      */
-    public static class Human {
+    public static class Human implements Serializable {
+        static final long serialVersionUID = 42L;
+
         private String humanName = null;
 
         public Human() {

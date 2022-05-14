@@ -1,86 +1,31 @@
 package Main;
 
-import Data.*;
-import Exceptions.InputException;
+import Models.*;
 import Interaction.Parser;
 import Interaction.Receiver;
 import Interaction.Sender;
-import Interfaces.IFormer;
-import Processing.*;
+import Realisation.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.util.Objects;
+import java.net.URL;
 import java.util.Scanner;
 
 /**
  * Main class
  */
-public class Client {
+public class Client extends Application {
     private static boolean finished;
 
     public static void main(String[] args) {
-        Registrator registrator = new Registrator(new Scanner(System.in));
-        try (DatagramSocket socket = registrator.register()) {
-            InetSocketAddress inetSocketAddress = new InetSocketAddress("localhost", 6666);
-
-            Sender sender = new Sender(socket);
-            Receiver receiver = new Receiver(socket);
-            OperationManager operationManager = new OperationManager(new Scanner(System.in));
-
-            sender.sendResponse(Parser.parseTo(new ClientDTO(true)), inetSocketAddress);
-
-            ServerDTO serverDTO;
-            StringBuilder message = new StringBuilder();
-
-            do {
-                serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
-                        .getResponse()));
-                message.append(new String(serverDTO.getMessage()));
-            } while (!serverDTO.isTerminating());
-            System.out.println(message.toString().trim());
-            message.setLength(0);
-
-            CommandManager commandManager = new CommandManager(serverDTO.getCommandData());
-
-            CityFormer cityFormer = new CityFormer(operationManager);
-            IFormer<User> userFormer = new UserFormer(operationManager, new HashPassword());
-            Executioner<City> executioner = new Executioner<>(userFormer, cityFormer, commandManager);
-
-            while (!Client.isFinished()) {
-                try {
-                    ClientDTO clientDTO = executioner.execute(operationManager.getLine());
-                    if (clientDTO != null) {
-                        sender.sendResponse(Parser.parseTo(clientDTO), inetSocketAddress);
-
-                        do {
-                            serverDTO = (ServerDTO) Objects.requireNonNull(Parser.parseFrom(receiver
-                                    .getResponse()));
-                            message.append(new String(serverDTO.getMessage()));
-                        } while (!serverDTO.isTerminating());
-                        System.out.println(message.toString().trim());
-                        message.setLength(0);
-
-                        if (executioner.getUserToCheck() != null) {
-                            if (serverDTO.isSuccess()) {
-                                executioner.setConfirmedUser(executioner.getUserToCheck());
-                            }
-                            executioner.setUserToCheck(null);
-                        }
-                    }
-                } catch (InputException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        } catch (InputException.ServerUnavailableException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Try again later with restarting the program.");
-        } catch (NullPointerException | IOException e) {
-            e.printStackTrace();
-            System.out.println("The program is terminated due to an error.");
-        }
+        Application.launch();
     }
 
     public static boolean isFinished() {
@@ -89,6 +34,16 @@ public class Client {
 
     public static void setFinished(boolean finished) {
         Client.finished = finished;
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL xml = getClass().getResource("/LoginScreen.fxml");
+        fxmlLoader.setLocation(xml);
+
+        primaryStage.setScene(new Scene(fxmlLoader.load()));
+        primaryStage.show();
     }
 
     public static class Registrator {

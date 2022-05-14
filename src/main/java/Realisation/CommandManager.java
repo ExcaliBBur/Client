@@ -1,6 +1,6 @@
-package Processing;
+package Realisation;
 
-import Data.Command;
+import Models.Command;
 import Main.Client;
 import Utilities.TextReader;
 import org.reflections.Reflections;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -24,7 +25,7 @@ public class CommandManager {
      *
      * @param commandData server command data
      */
-    public CommandManager(ArrayList<Command.CommandData> commandData) {
+    public CommandManager(List<Command.CommandData> commandData) {
         commandData.forEach(x -> this.getCommands().put(x.getName(), x));
         this.clientCommands = setClientCommands();
         this.getClientCommands().forEach((x, y) -> this.getCommands().put(y.getName(),
