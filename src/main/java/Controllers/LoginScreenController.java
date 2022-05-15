@@ -21,11 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-
 public class LoginScreenController {
     private DatagramSocket channel;
     private List<SocketAddress> listeners;
-    private List<City> base;
 
     @FXML
     //TODO Честно, не знаю пока, что там будет.
@@ -61,15 +59,14 @@ public class LoginScreenController {
                 Arrays.asList(Serializer.serialize(user))), false,
                 null));
 
-        StorageListener listener = new StorageListener(channel, base, new LinkedList<>(), lock);
+        StorageListener listener = new StorageListener(channel, new LinkedList<>(), lock);
         listener.start();
         this.getListeners().forEach(x -> Sender.sendResponse(this.getChannel(), data, x));
 
         ServerDTO<City> answer = this.blockAuth(listener, lock);
 
         if (answer.isSuccess()) {
-            loginButton.getScene().getWindow().hide();
-            this.changeScreen(user, base);
+            this.changeScreen(user, listener);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
 
@@ -102,19 +99,21 @@ public class LoginScreenController {
         return listeners;
     }
 
-    public void changeScreen(User user, List<City> base) {
+    private void changeScreen(User user, StorageListener listener) {
         try {
-            Stage secondStage = new Stage();
-            FXMLLoader fxmlLoader = new FXMLLoader();
+            loginButton.getScene().getWindow().hide();
+            FXMLLoader preset = new FXMLLoader();
             URL xml = getClass().getResource("/MainScreen.fxml");
-            fxmlLoader.setLocation(xml);
-            Parent root = fxmlLoader.load();
+            preset.setLocation(xml);
 
+            Parent root = preset.load();
+            Stage secondStage = new Stage();
             secondStage.setScene(new Scene(root));
 
-            MainScreenController mainScreenController = fxmlLoader.getController();
-            mainScreenController.setBase(base);
-            mainScreenController.setUser(user);
+            MainScreenController controller = preset.getController();
+            controller.setUser(user);
+
+            listener.setController(controller);
 
             secondStage.show();
         } catch (IOException e) {
@@ -128,9 +127,5 @@ public class LoginScreenController {
 
     public void setChannel(DatagramSocket channel) {
         this.channel = channel;
-    }
-
-    public void setBase(List<City> base) {
-        this.base = base;
     }
 }

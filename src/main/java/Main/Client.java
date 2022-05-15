@@ -52,7 +52,6 @@ public class Client extends Application {
         loginScreenController.setChannel(registrator.register());
         loginScreenController.setListeners(new ArrayList<>(Arrays.asList(new
                 InetSocketAddress(InetAddress.getByName("localhost"), 6666))));
-        loginScreenController.setBase(new ArrayList<>());
 
         primaryStage.show();
     }

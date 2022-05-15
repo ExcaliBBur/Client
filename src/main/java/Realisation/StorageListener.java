@@ -2,26 +2,28 @@ package Realisation;
 
 import Exceptions.InputException;
 import Interaction.Parser;
-import Models.City;
-import Models.DTOWrapper;
-import Models.Listener;
-import Models.ServerDTO;
+import Models.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class StorageListener extends Listener {
+public class StorageListener extends Listener<City> {
     private final Queue<ServerDTO<City>> answersQueue;
     private final ReentrantReadWriteLock lock;
 
-    public StorageListener(DatagramSocket channel, List<City> collection, Queue<ServerDTO<City>> answerQueue,
-                           ReentrantReadWriteLock lock) {
-        super(channel, collection);
+    public StorageListener(DatagramSocket channel, StorageController<City> controller,
+                           Queue<ServerDTO<City>> answerQueue, ReentrantReadWriteLock lock) {
+        super(channel, controller);
+        this.answersQueue = answerQueue;
+        this.lock = lock;
+    }
+
+    public StorageListener(DatagramSocket channel, Queue<ServerDTO<City>> answerQueue, ReentrantReadWriteLock lock) {
+        super(channel);
         this.answersQueue = answerQueue;
         this.lock = lock;
     }
@@ -48,14 +50,13 @@ public class StorageListener extends Listener {
                     if (serverDTO.getDtoType().equals(ServerDTO.DTOType.RESPONSE)) {
                         writeLock.lock();
                         this.answersQueue.add(serverDTO);
-                        this.getCollection().addAll(Arrays.asList(new City(), new City()));
                         writeLock.unlock();
                     } else {
-                        this.getCollection().clear();
-                        this.getCollection().addAll(serverDTO.getCollection());
+                        writeLock.lock();
+                        this.getController().updateContents(serverDTO.getCollection());
+                        writeLock.unlock();
 
                         //TODO ЭТО ПОКА ЧТО ЗАТЫЧКА, СТОИТ ПОДУМАТЬ, КАК ЛУЧШЕ ОФОРМИТЬ МОМЕНТ ПОДМЕНЫ СОДЕРЖИМОГО OBSERVABLE LIST.
-
                     }
                 } catch (InputException.ServerUnavailableException e) {
                     e.printStackTrace();

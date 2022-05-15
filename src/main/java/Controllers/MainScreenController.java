@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.City;
+import Models.StorageController;
 import Models.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,11 +10,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 
-public class MainScreenController {
-    private List<City> base;
-    private ObservableList<City> collection = FXCollections.observableArrayList(base);
+public class MainScreenController extends StorageController<City> {
+    private final ObservableList<City> collection = FXCollections.observableArrayList();
     private User user;
 
     @FXML
@@ -61,10 +62,6 @@ public class MainScreenController {
     @FXML
     private TableColumn<City, String> humanNameColumn;
 
-    public void setBase(List<City> base) {
-        this.base = base;
-    }
-
     public void setUser(User user) {
         this.user = user;
     }
@@ -87,5 +84,12 @@ public class MainScreenController {
         this.humanNameColumn.setCellValueFactory(new PropertyValueFactory<>("humanName"));
 
         table.getItems().setAll(collection);
+    }
+
+    public void updateContents(Collection<City> collection) {
+        this.collection.clear();
+        this.collection.addAll(collection);
+
+        System.out.println(collection.size());
     }
 }

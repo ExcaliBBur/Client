@@ -3,22 +3,29 @@ package Models;
 import Interaction.Receiver;
 
 import java.net.DatagramSocket;
-import java.util.List;
 
-public abstract class Listener extends Thread {
+public abstract class Listener<T> extends Thread {
     private final Receiver receiver;
-    private final List<City> collection;
+    private StorageController<T> controller;
 
-    public Listener(DatagramSocket channel, List<City> collection) {
+    public Listener(DatagramSocket channel, StorageController<T> controller) {
         this.receiver = new Receiver(channel);
-        this.collection = collection;
+        this.controller = controller;
+    }
+
+    public Listener(DatagramSocket channel) {
+        this.receiver = new Receiver(channel);
     }
 
     public Receiver getReceiver() {
         return receiver;
     }
 
-    public List<City> getCollection() {
-        return collection;
+    public StorageController<T> getController() {
+        return controller;
+    }
+
+    public void setController(StorageController<T> controller) {
+        this.controller = controller;
     }
 }
