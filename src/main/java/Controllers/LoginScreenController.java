@@ -66,7 +66,7 @@ public class LoginScreenController {
         ServerDTO<City> answer = this.blockAuth(listener, lock);
 
         if (answer.isSuccess()) {
-            this.changeScreen(user, listener);
+            this.changeScreen(user, listener, answer);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
 
@@ -99,7 +99,7 @@ public class LoginScreenController {
         return listeners;
     }
 
-    private void changeScreen(User user, StorageListener listener) {
+    private void changeScreen(User user, StorageListener listener, ServerDTO<City> answer) {
         try {
             loginButton.getScene().getWindow().hide();
             FXMLLoader preset = new FXMLLoader();
@@ -112,6 +112,8 @@ public class LoginScreenController {
 
             MainScreenController controller = preset.getController();
             controller.setUser(user);
+            controller.updateContents(answer.getCollection());
+            System.out.println(controller.getCollection().size());
 
             listener.setController(controller);
 
