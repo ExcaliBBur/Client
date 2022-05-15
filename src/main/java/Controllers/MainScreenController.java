@@ -36,13 +36,13 @@ public class MainScreenController extends StorageController<City> {
     private TableColumn<City, String> creationDateColumn;
 
     @FXML
-    private TableColumn<City, String> areaColumn;
+    private TableColumn<City, Integer> areaColumn;
 
     @FXML
-    private TableColumn<City, String> populationColumn;
+    private TableColumn<City, Integer> populationColumn;
 
     @FXML
-    private TableColumn<City, String> metersAboveSeaLevelColumn;
+    private TableColumn<City, Integer> metersAboveSeaLevelColumn;
 
     @FXML
     private TableColumn<City, City.Climate> climateColumn;
