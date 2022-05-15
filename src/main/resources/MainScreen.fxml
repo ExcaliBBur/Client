@@ -3,36 +3,38 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.4882943143812709" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainScreenController">
+<SplitPane dividerPositions="0.4882943143812709" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainScreenController">
     <items>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="242.0">
             <children>
                 <TableView fx:id="table" prefHeight="400.0" prefWidth="600.0">
                     <columns>
-                        <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
-                        <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+                        <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID"/>
+                        <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name"/>
                         <TableColumn fx:id="coordinatesColumn" prefWidth="75.0" text="Coordinates">
                             <columns>
-                                <TableColumn prefWidth="75.0" text="X" fx:id="xColumn" />
-                                <TableColumn fx:id="yColumn" prefWidth="75.0" text="Y" />
+                                <TableColumn prefWidth="75.0" text="X" fx:id="xColumn"/>
+                                <TableColumn fx:id="yColumn" prefWidth="75.0" text="Y"/>
                             </columns>
                         </TableColumn>
-                        <TableColumn fx:id="creationDateColumn" prefWidth="75.0" text="CreationDate" />
-                        <TableColumn fx:id="areaColumn" prefWidth="75.0" text="Area" />
-                        <TableColumn fx:id="populationColumn" prefWidth="75.0" text="Population" />
-                        <TableColumn fx:id="metersAboveSeaLevelColumn" prefWidth="75.0" text="MetersAboveSeaLevel" />
-                        <TableColumn fx:id="climateColumn" prefWidth="75.0" text="Climate" />
-                        <TableColumn fx:id="governmentColumn" prefWidth="75.0" text="Government" />
-                        <TableColumn fx:id="standardOfLivingColumn" prefWidth="75.0" text="StandardOfLiving" />
+                        <TableColumn fx:id="creationDateColumn" prefWidth="75.0" text="CreationDate"/>
+                        <TableColumn fx:id="areaColumn" prefWidth="75.0" text="Area"/>
+                        <TableColumn fx:id="populationColumn" prefWidth="75.0" text="Population"/>
+                        <TableColumn fx:id="metersAboveSeaLevelColumn" prefWidth="75.0" text="MetersAboveSeaLevel"/>
+                        <TableColumn fx:id="climateColumn" prefWidth="75.0" text="Climate"/>
+                        <TableColumn fx:id="governmentColumn" prefWidth="75.0" text="Government"/>
+                        <TableColumn fx:id="standardOfLivingColumn" prefWidth="75.0" text="StandardOfLiving"/>
                         <TableColumn fx:id="governorColumn" prefWidth="75.0" text="Governor">
                             <columns>
-                                <TableColumn fx:id="humanNameColumn" prefWidth="75.0" text="HumanName" />
+                                <TableColumn fx:id="humanNameColumn" prefWidth="75.0" text="HumanName"/>
                             </columns>
                         </TableColumn>
                     </columns>
                 </TableView>
             </children>
         </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="403.0" />
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="403.0"/>
     </items>
 </SplitPane>

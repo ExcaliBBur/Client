@@ -3,14 +3,12 @@ package Controllers;
 import Models.City;
 import Models.StorageController;
 import Models.User;
-import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 public class MainScreenController extends StorageController<City> {
@@ -20,19 +18,19 @@ public class MainScreenController extends StorageController<City> {
     private TableView<City> table;
 
     @FXML
-    private TableColumn<City, String> idColumn;
+    private TableColumn<City, Integer> idColumn;
 
     @FXML
     private TableColumn<City, String> nameColumn;
 
     @FXML
-    private TableColumn<City, String> coordinatesColumn;
+    private TableColumn<City, City.Coordinates> coordinatesColumn;
 
     @FXML
-    private TableColumn<City, String> xColumn;
+    private TableColumn<City, Double> xColumn;
 
     @FXML
-    private TableColumn<City, String> yColumn;
+    private TableColumn<City, Float> yColumn;
 
     @FXML
     private TableColumn<City, String> creationDateColumn;
@@ -47,16 +45,16 @@ public class MainScreenController extends StorageController<City> {
     private TableColumn<City, String> metersAboveSeaLevelColumn;
 
     @FXML
-    private TableColumn<City, String> climateColumn;
+    private TableColumn<City, City.Climate> climateColumn;
 
     @FXML
-    private TableColumn<City, String> governmentColumn;
+    private TableColumn<City, City.Government> governmentColumn;
 
     @FXML
-    private TableColumn<City, String> standardOfLivingColumn;
+    private TableColumn<City, City.StandardOfLiving> standardOfLivingColumn;
 
     @FXML
-    private TableColumn<City, String> governorColumn;
+    private TableColumn<City, City.Human> governorColumn;
 
     @FXML
     private TableColumn<City, String> humanNameColumn;
@@ -69,18 +67,31 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     public void initialize() {
-        this.idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        this.xColumn.setCellValueFactory(new PropertyValueFactory<>("firstCoordinates"));
-        this.yColumn.setCellValueFactory(new PropertyValueFactory<>("secondCoordinates"));
-        this.creationDateColumn.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
-        this.areaColumn.setCellValueFactory(new PropertyValueFactory<>("area"));
-        this.populationColumn.setCellValueFactory(new PropertyValueFactory<>("population"));
-        this.metersAboveSeaLevelColumn.setCellValueFactory(new PropertyValueFactory<>("meters"));
-        this.climateColumn.setCellValueFactory(new PropertyValueFactory<>("climate"));
-        this.governmentColumn.setCellValueFactory(new PropertyValueFactory<>("government"));
-        this.standardOfLivingColumn.setCellValueFactory(new PropertyValueFactory<>("standardOfLiving"));
-        this.humanNameColumn.setCellValueFactory(new PropertyValueFactory<>("humanName"));
+        this.idColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+        this.nameColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getName()));
+        this.xColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getFirstCoordinates()));
+        this.yColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getSecondCoordinates()));
+        this.creationDateColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().toString()
+                        .replace("T", " ")));
+        this.areaColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getArea()));
+        this.populationColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getPopulation()));
+        this.metersAboveSeaLevelColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getMeters()));
+        this.climateColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getClimate()));
+        this.governmentColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernment()));
+        this.standardOfLivingColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getStandardOfLiving()));
+        this.humanNameColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernor().getHumanName()));
 
         this.setCollection(FXCollections.observableArrayList());
     }
