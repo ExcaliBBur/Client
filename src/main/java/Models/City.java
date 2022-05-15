@@ -2,7 +2,6 @@ package Models;
 
 import Exceptions.InputException;
 import com.fasterxml.jackson.annotation.JsonGetter;
-import javassist.SerialVersionUID;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,10 +21,6 @@ public class City extends Collectables implements Serializable {
     private Human governor;
 
     public static final long serialVersionUID = 42L;
-
-    public City() {
-
-    }
 
     /**
      * Constructor, gets all necessary things.
@@ -53,6 +48,10 @@ public class City extends Collectables implements Serializable {
         this.government = government;
         this.standardOfLiving = standardOfLiving;
         this.governor = governor;
+    }
+
+    public City() {
+
     }
 
     /**

@@ -113,7 +113,6 @@ public class LoginScreenController {
             MainScreenController controller = preset.getController();
             controller.setUser(user);
             controller.updateContents(answer.getCollection());
-            System.out.println(controller.getCollection().size());
 
             listener.setController(controller);
 

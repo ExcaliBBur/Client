@@ -3,6 +3,7 @@ package Controllers;
 import Models.City;
 import Models.StorageController;
 import Models.User;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -82,11 +83,10 @@ public class MainScreenController extends StorageController<City> {
         this.humanNameColumn.setCellValueFactory(new PropertyValueFactory<>("humanName"));
 
         this.setCollection(FXCollections.observableArrayList());
-
-        table.getItems().setAll(this.getCollection());
     }
 
     public void updateContents(Collection<City> collection) {
         this.getCollection().setAll(collection);
+        table.getItems().setAll(this.getCollection());
     }
 }
