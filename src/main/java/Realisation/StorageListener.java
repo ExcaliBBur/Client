@@ -10,6 +10,7 @@ import Models.ServerDTO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.DatagramSocket;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -47,12 +48,14 @@ public class StorageListener extends Listener {
                     if (serverDTO.getDtoType().equals(ServerDTO.DTOType.RESPONSE)) {
                         writeLock.lock();
                         this.answersQueue.add(serverDTO);
+                        this.getCollection().addAll(Arrays.asList(new City(), new City()));
                         writeLock.unlock();
                     } else {
                         this.getCollection().clear();
                         this.getCollection().addAll(serverDTO.getCollection());
 
                         //TODO ЭТО ПОКА ЧТО ЗАТЫЧКА, СТОИТ ПОДУМАТЬ, КАК ЛУЧШЕ ОФОРМИТЬ МОМЕНТ ПОДМЕНЫ СОДЕРЖИМОГО OBSERVABLE LIST.
+
                     }
                 } catch (InputException.ServerUnavailableException e) {
                     e.printStackTrace();

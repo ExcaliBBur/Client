@@ -9,6 +9,7 @@ import Realisation.StorageListener;
 import Utilities.Serializer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -102,16 +103,23 @@ public class LoginScreenController {
     }
 
     public void changeScreen(User user, List<City> base) {
-        Stage secondStage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL xml = getClass().getResource("/MainScreen.fxml");
-        fxmlLoader.setLocation(xml);
         try {
-            secondStage.setScene(new Scene(fxmlLoader.load()));
+            Stage secondStage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            URL xml = getClass().getResource("/MainScreen.fxml");
+            fxmlLoader.setLocation(xml);
+            Parent root = fxmlLoader.load();
+
+            secondStage.setScene(new Scene(root));
+
+            MainScreenController mainScreenController = fxmlLoader.getController();
+            mainScreenController.setBase(base);
+            mainScreenController.setUser(user);
+
+            secondStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        secondStage.show();
     }
 
     public void setListeners(List<SocketAddress> listeners) {
