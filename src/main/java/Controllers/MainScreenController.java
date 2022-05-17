@@ -67,6 +67,7 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     public void initialize() {
+
         this.idColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
         idColumn.setSortable(false);
