@@ -69,29 +69,52 @@ public class MainScreenController extends StorageController<City> {
     public void initialize() {
         this.idColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+        idColumn.setSortable(false);
+
         this.nameColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getName()));
+        nameColumn.setSortable(false);
+
         this.xColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getFirstCoordinates()));
+        xColumn.setSortable(false);
+
         this.yColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getSecondCoordinates()));
+        yColumn.setSortable(false);
+
         this.creationDateColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().toString()
                         .replace("T", " ")));
+        creationDateColumn.setSortable(false);
+
         this.areaColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getArea()));
+        areaColumn.setSortable(false);
+
         this.populationColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getPopulation()));
+        populationColumn.setSortable(false);
+
         this.metersAboveSeaLevelColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getMeters()));
+        metersAboveSeaLevelColumn.setSortable(false);
+
         this.climateColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getClimate()));
+        climateColumn.setSortable(false);
+
         this.governmentColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernment()));
+        governmentColumn.setSortable(false);
+
         this.standardOfLivingColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getStandardOfLiving()));
+        standardOfLivingColumn.setSortable(false);
+
         this.humanNameColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernor().getHumanName()));
+        humanNameColumn.setSortable(false);
 
         this.setCollection(FXCollections.observableArrayList());
     }
