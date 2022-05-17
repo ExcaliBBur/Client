@@ -15,7 +15,7 @@ public class MainScreenController extends StorageController<City> {
     private User user;
 
     @FXML
-    private TableView<City> table;
+    private TableView<City> contentTable;
 
     @FXML
     private TableColumn<City, Integer> idColumn;
@@ -122,6 +122,6 @@ public class MainScreenController extends StorageController<City> {
 
     public void updateContents(Collection<City> collection) {
         this.getCollection().setAll(collection);
-        table.getItems().setAll(this.getCollection());
+        contentTable.getItems().setAll(this.getCollection());
     }
 }
