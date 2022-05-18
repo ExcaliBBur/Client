@@ -41,8 +41,6 @@ public class Client extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL xml = getClass().getResource("/LoginScreen.fxml");
         fxmlLoader.setLocation(xml);
-
-        Registrator registrator = new Registrator(new Scanner(System.in));
         Parent root = fxmlLoader.load();
 
         LoginScreenController loginScreenController = fxmlLoader.getController();
@@ -58,27 +56,25 @@ public class Client extends Application {
     }
 
     public static class Registrator {
-        private final Scanner scanner;
-
-        public Registrator(Scanner scanner) {
-            this.scanner = scanner;
-        }
 
         public DatagramSocket register() {
             boolean isCorrect;
+            int tmp = 0;
             DatagramSocket datagramSocket = null;
             System.out.println("Enter the port.");
             do {
                 isCorrect = false;
                 try {
-                    datagramSocket = new DatagramSocket(Integer.parseInt(scanner.nextLine()));
-                    isCorrect = true;
-                } catch (SocketException e) {
-                    System.out.println("The entered port is employed, try again.");
-                } catch (NumberFormatException e) {
-                    System.out.println("Error, need to be integer, try again.");
+                    for (int i = 1; i < 65000; i++) {
+                        datagramSocket = new DatagramSocket(i);
+                        isCorrect = true;
+                        tmp = i;
+                    }
+                } catch (SocketException ignored) {
+
                 }
             } while (!isCorrect);
+            System.out.println("Сервер стартует на порте " + tmp);
             return datagramSocket;
         }
     }
