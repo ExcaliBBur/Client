@@ -98,6 +98,7 @@ public class LoginScreenController {
     private void changeScreen(User user, StorageListener listener, ServerDTO<City> answer) {
         try {
             loginButton.getScene().getWindow().hide();
+
             FXMLLoader preset = new FXMLLoader();
             URL xml = getClass().getResource("/MainScreen.fxml");
             preset.setLocation(xml);
@@ -116,6 +117,8 @@ public class LoginScreenController {
             listener.setController(controller);
 
             secondStage.show();
+            secondStage.setOnCloseRequest(windowEvent -> System.exit(0));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
