@@ -30,15 +30,18 @@ public class SortFilterController {
     public void confirm() {
         Rule rule = new Rule(this.columnBox.getSelectionModel().getSelectedItem(), this.optionBox
                 .getSelectionModel().getSelectedItem(), this.textField.getText());
-        switch (purpose) {
-            case ADD: {
-                controller.addRuleContents(rule);
-                this.okButton.getScene().getWindow().hide();
-                break;
-            }
-            case EDIT: {
-                controller.editRuleContents(this.id, rule);
-                this.okButton.getScene().getWindow().hide();
+
+        if (rule.getColumn() != null && rule.getOrder() != null) {
+            switch (purpose) {
+                case ADD: {
+                    controller.addRuleContents(rule);
+                    this.okButton.getScene().getWindow().hide();
+                    break;
+                }
+                case EDIT: {
+                    controller.editRuleContents(this.id, rule);
+                    this.okButton.getScene().getWindow().hide();
+                }
             }
         }
     }

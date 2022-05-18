@@ -1,9 +1,12 @@
 package Controllers;
 
-import Models.City;
-import Models.Rule;
-import Models.StorageController;
-import Models.User;
+import Exceptions.InputException;
+import Interaction.Parser;
+import Interfaces.IFormer;
+import Models.*;
+import Realisation.ClientDTO;
+import Realisation.StorageListener;
+import Utilities.Serializer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,21 +14,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MainScreenController extends StorageController<City> {
     private final ObservableList<Rule> ruleList = FXCollections.observableArrayList();
     private final ObservableList<City> sortedCityList = FXCollections.observableArrayList();
+    private StorageListener listener;
     private User user;
 
     @FXML
@@ -86,16 +90,68 @@ public class MainScreenController extends StorageController<City> {
     private TableColumn<Rule, String> parameterColumn;
 
     @FXML
-    private Button addButton;
+    private Button logoutButton;
 
     @FXML
-    private Button editButton;
+    private TextField usernameTextBlock;
 
     @FXML
-    private Button removeRuleButton;
+    private Button okButton;
+
+    @FXML
+    private RadioButton addRadioButton;
+
+    @FXML
+    private RadioButton editRadioButton;
+
+    @FXML
+    private RadioButton addIfMinRadioButton;
+
+    @FXML
+    private RadioButton removeGreaterRadioButton;
+
+    @FXML
+    private RadioButton removeLowerRadioButton;
+
+    @FXML
+    private ToggleGroup commandGroup;
+
+    @FXML
+    private TextField nameInput;
+
+    @FXML
+    private TextField xInput;
+
+    @FXML
+    private TextField yInput;
+
+    @FXML
+    private TextField areaInput;
+
+    @FXML
+    private TextField populationInput;
+
+    @FXML
+    private TextField metersInput;
+
+    @FXML
+    private TextField climateInput;
+
+    @FXML
+    private TextField governmentInput;
+
+    @FXML
+    private TextField standardOfLivingInput;
+
+    @FXML
+    private TextField humanNameInput;
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setListener(StorageListener listener) {
+        this.listener = listener;
     }
 
     //TODO СТОИТ ЗАДУМАТЬСЯ НАД ТЕМ, ЧТОБЫ ОБЪЕДИНИТЬ ВСЕ СЕТТЕРЫ В КАКОЙ-НИБУДЬ МЕТОД, КОТОРЫЙ БЫ УСТАНАВЛИВАЛ ВСЕ ТРЕБУЕМЫЕ ЗНАЧЕНИЯ.
@@ -171,20 +227,13 @@ public class MainScreenController extends StorageController<City> {
     }
 
     private void fillCityTable() {
-        Collection<City> collection = new ArrayList<>(this.getCollection());
+        Stream<City> stream = this.getCollection().stream();
         for (Rule rule : this.ruleList) {
-            collection = rule.transform(collection);
+            stream = rule.transform(stream);
         }
 
-        this.sortedCityList.setAll(collection);
+        this.sortedCityList.setAll(stream.collect(Collectors.toList()));
         contentTable.getItems().setAll(sortedCityList);
-    }
-
-    public void updateRuleContents(Collection<Rule> ruleList) {
-        this.ruleList.addAll(ruleList);
-        this.ruleTable.getItems().setAll(this.ruleList);
-
-        this.fillCityTable();
     }
 
     public void addRuleContents(Rule rule) {
@@ -199,6 +248,135 @@ public class MainScreenController extends StorageController<City> {
         this.ruleTable.getItems().setAll(this.ruleList);
 
         this.fillCityTable();
+    }
+
+    @FXML
+    private void remove() {
+        try {
+            int id = contentTable.getSelectionModel().getSelectedIndex();
+
+            if (id >= 0) {
+                this.contentTable.getSelectionModel().clearSelection();
+                byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData("remove_by_id", Arrays
+                        .asList(Serializer.serialize(this.getCollection().get(id).getId()))), false,
+                        this.user));
+
+                this.getSender().sendResponse(data);
+                ServerDTO<City> serverDTO = this.blockGetAnswer();
+
+                //TODO SOUT ERROR MESSAGE!
+            } else {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+
+            alert.setTitle("ERROR!");
+            alert.setHeaderText(null);
+            alert.setContentText("Dick!");
+            alert.showAndWait();
+
+            //TODO ERROR!
+        }
+    }
+
+    @FXML
+    private void clear() {
+        this.contentTable.getSelectionModel().clearSelection();
+        byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData("clear", Arrays.asList()),
+                false, this.user));
+
+        this.getSender().sendResponse(data);
+        ServerDTO<City> serverDTO = this.blockGetAnswer();
+
+        //TODO SOUT ERROR MESSAGE!
+    }
+
+    private ServerDTO<City> blockGetAnswer() {
+        ReentrantReadWriteLock.ReadLock readLock = this.listener.getLock().readLock();
+        ServerDTO<City> serverDTO;
+        do {
+            readLock.lock();
+            serverDTO = listener.getNextAnswer();
+            readLock.unlock();
+        } while (serverDTO == null);
+
+        return serverDTO;
+    }
+
+    @FXML
+    private void logout() throws IOException {
+        logoutButton.getScene().getWindow().hide();
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        URL xml = getClass().getResource("/LoginScreen.fxml");
+        fxmlLoader.setLocation(xml);
+        Stage primaryStage = new Stage();
+        Parent root = fxmlLoader.load();
+
+        LoginScreenController loginScreenController = fxmlLoader.getController();
+        fxmlLoader.setController(loginScreenController);
+        primaryStage.setScene(new Scene(root));
+
+        loginScreenController.setSender(this.getSender());
+        primaryStage.show();
+
+        listener.interrupt();
+    }
+
+    @FXML
+    private void doSomething() {
+        RadioButton rb = (RadioButton) commandGroup.getSelectedToggle();
+        IFormer<City> iFormer = () -> {
+            try {
+                City object = new City();
+                object.setInputName(this.nameInput.getText());
+                object.setCoordinates(new City.Coordinates());
+                object.getCoordinates().setInputFirstCoordinates(this.xInput.getText());
+                object.getCoordinates().setInputSecondCoordinates(this.yInput.getText());
+                object.setInputArea(this.areaInput.getText());
+                object.setInputPopulation(this.populationInput.getText());
+                object.setInputMeters(this.metersInput.getText());
+                object.setInputClimate(this.climateInput.getText());
+                object.setInputGovernment(this.governmentInput.getText());
+                object.setInputStandardOfLiving(this.standardOfLivingInput.getText());
+                object.setGovernor(new City.Human());
+                object.getGovernor().setInputHumanName(this.humanNameInput.getText());
+                return object;
+            } catch (InputException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+
+                alert.setTitle("ERROR!");
+                alert.setHeaderText(null);
+                alert.setContentText("Dick!");
+                alert.showAndWait();
+
+                //TODO ERROR!
+            }
+            return null;
+        };
+
+        //TODO ЧТО-НИБУДЬ ПРИДУМАТЬ
+
+        City city = iFormer.formObj();
+
+        if (city != null) {
+            byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(rb.getText().toLowerCase()
+                    .replace(" ", "_"), Arrays.asList(Serializer.serialize(city))), false,
+                    this.user));
+
+            this.getSender().sendResponse(data);
+            ServerDTO<City> serverDTO = this.blockGetAnswer();
+
+            if (!serverDTO.isSuccess()) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+                alert.setTitle("SOMETHING WENT WRONG!");
+                alert.setHeaderText(null);
+                alert.setContentText(new String(serverDTO.getMessage()));
+                alert.showAndWait();
+            }
+        }
     }
 
     @FXML
@@ -264,7 +442,7 @@ public class MainScreenController extends StorageController<City> {
     @FXML
     private void removeRule() {
         try {
-            this.ruleList.remove(this.ruleTable.getSelectionModel().getFocusedIndex());
+            this.ruleList.remove(this.ruleTable.getSelectionModel().getSelectedIndex());
             this.ruleTable.getItems().setAll(ruleList);
 
             fillCityTable();

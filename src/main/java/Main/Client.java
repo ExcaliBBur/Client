@@ -49,9 +49,10 @@ public class Client extends Application {
         fxmlLoader.setController(loginScreenController);
         primaryStage.setScene(new Scene(root));
 
-        loginScreenController.setChannel(registrator.register());
-        loginScreenController.setListeners(new ArrayList<>(Arrays.asList(new
-                InetSocketAddress(InetAddress.getByName("localhost"), 6666))));
+        Sender sender = new Sender(new Registrator().register(), new InetSocketAddress(InetAddress
+                .getByName("localhost"), 6666));
+
+        loginScreenController.setSender(sender);
 
         primaryStage.show();
     }

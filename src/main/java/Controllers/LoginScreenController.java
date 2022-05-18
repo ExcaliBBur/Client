@@ -18,12 +18,10 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LoginScreenController {
-    private DatagramSocket channel;
-    private List<SocketAddress> listeners;
+    private Sender sender;
 
     @FXML
     //TODO Честно, не знаю пока, что там будет.
@@ -59,9 +57,9 @@ public class LoginScreenController {
                 Arrays.asList(Serializer.serialize(user))), false,
                 null));
 
-        StorageListener listener = new StorageListener(channel, new LinkedList<>(), lock);
+        StorageListener listener = new StorageListener(this.sender.getChannel(), new LinkedList<>(), lock);
         listener.start();
-        this.getListeners().forEach(x -> Sender.sendResponse(this.getChannel(), data, x));
+        sender.sendResponse(data);
 
         ServerDTO<City> answer = this.blockAuth(listener, lock);
 
@@ -93,12 +91,8 @@ public class LoginScreenController {
         return serverDTO;
     }
 
-    public DatagramSocket getChannel() {
-        return channel;
-    }
-
-    public List<SocketAddress> getListeners() {
-        return listeners;
+    public void setSender(Sender sender) {
+        this.sender = sender;
     }
 
     private void changeScreen(User user, StorageListener listener, ServerDTO<City> answer) {
@@ -114,6 +108,9 @@ public class LoginScreenController {
 
             MainScreenController controller = preset.getController();
             controller.setUser(user);
+            controller.setSender(sender);
+            controller.setListener(listener);
+
             controller.updateContents(answer.getCollection());
 
             listener.setController(controller);
@@ -122,13 +119,5 @@ public class LoginScreenController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setListeners(List<SocketAddress> listeners) {
-        this.listeners = listeners;
-    }
-
-    public void setChannel(DatagramSocket channel) {
-        this.channel = channel;
     }
 }

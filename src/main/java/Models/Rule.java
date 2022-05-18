@@ -1,13 +1,12 @@
 package Models;
 
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Rule {
     private final Column column;
     private final Order order;
-    private String parameter;
+    private final String parameter;
 
     public Rule(Column column, Order order, String parameter) {
         this.column = column;
@@ -15,13 +14,8 @@ public class Rule {
         this.parameter = parameter;
     }
 
-    public Rule(Column column, Order order) {
-        this.column = column;
-        this.order = order;
-    }
-
-    public Collection<City> transform(Collection<City> collection) {
-        return order.doOption(column, parameter, collection);
+    public Stream<City> transform(Stream<City> stream) {
+        return order.doOption(column, parameter, stream);
     }
 
     public Column getColumn() {
@@ -129,7 +123,13 @@ public class Rule {
         CLIMATE("climate") {
             @Override
             public Comparator<City> getComparator() {
-                return Comparator.comparing(City::getClimate);
+                return Comparator.comparing(o -> {
+                    try {
+                        return o.getClimate().getName();
+                    } catch (NullPointerException e) {
+                        return "";
+                    }
+                });
             }
 
             @Override
@@ -144,7 +144,13 @@ public class Rule {
         GOVERNMENT("government") {
             @Override
             public Comparator<City> getComparator() {
-                return Comparator.comparing(City::getGovernment);
+                return Comparator.comparing(o -> {
+                    try {
+                        return o.getGovernment().getName();
+                    } catch (NullPointerException e) {
+                        return "";
+                    }
+                });
             }
 
             @Override
@@ -159,7 +165,13 @@ public class Rule {
         STANDARD_OF_LIVING("standardOfLiving") {
             @Override
             public Comparator<City> getComparator() {
-                return Comparator.comparing(City::getStandardOfLiving);
+                return Comparator.comparing(o -> {
+                    try {
+                        return o.getStandardOfLiving().getName();
+                    } catch (NullPointerException e) {
+                        return "";
+                    }
+                });
             }
 
             @Override
@@ -201,16 +213,22 @@ public class Rule {
     public enum Order {
         SORT_INCREASE("SORT_INCREASE") {
             @Override
-            public Collection<City> doOption(Column column, String parameter, Collection<City> collection) {
-                return collection.stream().sorted(column.getComparator()).filter(o -> column.getString(o)
-                        .contains(parameter)).collect(Collectors.toList());
+            public Stream<City> doOption(Column column, String parameter, Stream<City> stream) {
+                return stream.filter(o -> column.getString(o).contains(parameter))
+                        .sorted(column.getComparator());
             }
         },
         SORT_DECREASE("SORT_DECREASE") {
             @Override
-            public Collection<City> doOption(Column column, String parameter, Collection<City> collection) {
-                return collection.stream().sorted(column.getComparator().reversed()).filter(o -> column.getString(o)
-                        .contains(parameter)).collect(Collectors.toList());
+            public Stream<City> doOption(Column column, String parameter, Stream<City> stream) {
+                return stream.filter(o -> column.getString(o).contains(parameter)).sorted(column
+                        .getComparator().reversed());
+            }
+        },
+        NONE("NONE") {
+            @Override
+            public Stream<City> doOption(Column column, String parameter, Stream<City> stream) {
+                return stream.filter(o -> column.getString(o).contains(parameter));
             }
         };
 
@@ -220,7 +238,7 @@ public class Rule {
             this.name = name;
         }
 
-        abstract Collection<City> doOption(Column column, String parameter, Collection<City> collection);
+        abstract Stream<City> doOption(Column column, String parameter, Stream<City> stream);
 
         public String getName() {
             return name;

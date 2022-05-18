@@ -250,8 +250,6 @@ public class City extends Collectables implements Serializable {
                     }
                 }
                 throw new InputException.IncorrectOptionException();
-            } else {
-                System.out.println("You didn't enter the option, the value is set to default (null)");
             }
         } else {
             this.climate = null;
@@ -306,8 +304,6 @@ public class City extends Collectables implements Serializable {
                     }
                 }
                 throw new InputException.IncorrectOptionException();
-            } else {
-                System.out.println("You didn't enter the option, the value is set to default (null).");
             }
         } else {
             this.government = null;
@@ -366,8 +362,6 @@ public class City extends Collectables implements Serializable {
                     }
                 }
                 throw new InputException.IncorrectOptionException();
-            } else {
-                System.out.println("You didn't enter the option, the value is set to default (null).");
             }
         } else {
             this.standardOfLiving = null;
