@@ -218,9 +218,38 @@ public class MainScreenController extends StorageController<City> {
         this.parameterColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getParameter()));
         this.parameterColumn.setSortable(false);
+
+        contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            int id = contentTable.getSelectionModel().getSelectedIndex();
+            if (id != -1) {
+                this.nameInput.setText(this.getCollection().get(id).getName());
+                this.xInput.setText(this.getCollection().get(id).getCoordinates().getFirstCoordinates().toString());
+                this.yInput.setText(this.getCollection().get(id).getCoordinates().getSecondCoordinates().toString());
+                this.areaInput.setText(this.getCollection().get(id).getArea().toString());
+                this.populationInput.setText(this.getCollection().get(id).getPopulation().toString());
+                this.metersInput.setText(Integer.toString(this.getCollection().get(id).getMeters()));
+                try {
+                    this.climateInput.setText(this.getCollection().get(id).getClimate().getName());
+                } catch (NullPointerException e) {
+                    this.climateInput.setText("");
+                }
+                try {
+                    this.governmentInput.setText(this.getCollection().get(id).getGovernment().getName());
+                } catch (NullPointerException e) {
+                    this.governmentInput.setText("");
+                }
+                try {
+                    this.standardOfLivingInput.setText(this.getCollection().get(id).getStandardOfLiving().getName());
+                } catch (NullPointerException e) {
+                    this.standardOfLivingInput.setText("");
+                }
+                this.humanNameInput.setText(this.getCollection().get(id).getGovernor().getHumanName());
+            }
+        });
     }
 
     public void updateContents(Collection<City> collection) {
+        this.usernameTextBlock.setText(user.getName());
         this.getCollection().setAll(collection);
 
         this.fillCityTable();
