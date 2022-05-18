@@ -202,20 +202,15 @@ public class Rule {
         SORT_INCREASE("SORT_INCREASE") {
             @Override
             public Collection<City> doOption(Column column, String parameter, Collection<City> collection) {
-                return collection.stream().sorted(column.getComparator()).collect(Collectors.toList());
+                return collection.stream().sorted(column.getComparator()).filter(o -> column.getString(o)
+                        .contains(parameter)).collect(Collectors.toList());
             }
         },
         SORT_DECREASE("SORT_DECREASE") {
             @Override
             public Collection<City> doOption(Column column, String parameter, Collection<City> collection) {
-                return collection.stream().sorted(column.getComparator().reversed()).collect(Collectors.toList());
-            }
-        },
-        FILTER("FILTER") {
-            @Override
-            public Collection<City> doOption(Column column, String parameter, Collection<City> collection) {
-                return collection.stream().filter(o -> column.getString(o).contains(parameter)).collect(Collectors
-                        .toList());
+                return collection.stream().sorted(column.getComparator().reversed()).filter(o -> column.getString(o)
+                        .contains(parameter)).collect(Collectors.toList());
             }
         };
 
