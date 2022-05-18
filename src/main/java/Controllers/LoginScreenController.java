@@ -75,6 +75,8 @@ public class LoginScreenController {
             alert.setContentText("Dick!");
             alert.showAndWait();
 
+            //TODO ERROR!
+
             listener.interrupt();
         }
     }

@@ -612,10 +612,10 @@ public class City extends Collectables implements Serializable {
      * Climate of the city.
      */
     public enum Climate {
-        MONSOON("monsoon"),
-        OCEANIC("oceanic"),
-        MEDITERRANIAN("mediterranian"),
-        TUNDRA("tundra");
+        MONSOON("MONSOON"),
+        OCEANIC("OCEANIC"),
+        MEDITERRANIAN("MEDITERRANIAN"),
+        TUNDRA("TUNDRA");
 
         private final String name;
 
@@ -632,10 +632,10 @@ public class City extends Collectables implements Serializable {
      * Government of the city.
      */
     public enum Government {
-        MATRIARCHY("matriarchy"),
-        OLIGARCHY("oligarchy"),
-        PLUTOCRACY("plutocracy"),
-        JUNTA("junta");
+        MATRIARCHY("MATRIARCHY"),
+        OLIGARCHY("OLIGARCHY"),
+        PLUTOCRACY("PLUTOCRACY"),
+        JUNTA("JUNTA");
 
         private final String name;
 
@@ -652,11 +652,11 @@ public class City extends Collectables implements Serializable {
      * Standard of living of the city.
      */
     public enum StandardOfLiving {
-        ULTRA_HIGH("ultra high"),
-        VERY_HIGH("very high"),
-        MEDIUM("medium"),
-        LOW("low"),
-        ULTRA_LOW("ultra low");
+        ULTRA_HIGH("ULTRA_HIGH"),
+        VERY_HIGH("VERY_HIGH"),
+        MEDIUM("MEDIUM"),
+        LOW("LOW"),
+        ULTRA_LOW("ULTRA_LOW");
 
         private final String name;
 

@@ -24,6 +24,18 @@ public class Rule {
         return order.doOption(column, parameter, collection);
     }
 
+    public Column getColumn() {
+        return column;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
     public enum Column {
         ID("id") {
             @Override
@@ -77,7 +89,8 @@ public class Rule {
 
             @Override
             public String getString(City city) {
-                return city.getCreationDate().toString().replace("T", " ");
+                return city.getCreationDate().toString().replace("T",
+                        " ");
             }
         },
         AREA("area") {
@@ -121,7 +134,11 @@ public class Rule {
 
             @Override
             public String getString(City city) {
-                return city.getClimate().getName();
+                try {
+                    return city.getClimate().getName();
+                } catch (NullPointerException e) {
+                    return "";
+                }
             }
         },
         GOVERNMENT("government") {
@@ -132,7 +149,11 @@ public class Rule {
 
             @Override
             public String getString(City city) {
-                return city.getGovernment().getName();
+                try {
+                    return city.getGovernment().getName();
+                } catch (NullPointerException e) {
+                    return "";
+                }
             }
         },
         STANDARD_OF_LIVING("standardOfLiving") {
@@ -143,7 +164,11 @@ public class Rule {
 
             @Override
             public String getString(City city) {
-                return city.getStandardOfLiving().getName();
+                try {
+                    return city.getStandardOfLiving().getName();
+                } catch (NullPointerException e) {
+                    return "";
+                }
             }
         },
         HUMAN_NAME("humanName") {

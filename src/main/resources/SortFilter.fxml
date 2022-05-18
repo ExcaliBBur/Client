@@ -15,10 +15,10 @@
       prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="Controllers.SortFilterController">
     <children>
-        <ChoiceBox fx:id="optionBox" layoutX="107.0" layoutY="80.0" prefWidth="150.0"/>
-        <ComboBox fx:id="columnBox" layoutX="284.0" layoutY="80.0" prefWidth="150.0"/>
+        <ComboBox fx:id="columnBox" layoutX="107.0" layoutY="80.0" prefWidth="150.0"/>
+        <ComboBox fx:id="optionBox" layoutX="284.0" layoutY="80.0" prefWidth="150.0"/>
         <TextField fx:id="textField" layoutX="465.0" layoutY="80.0" prefHeight="25.0" prefWidth="159.0"
-                   visible="false"/>
+                   visible="true"/>
         <Text layoutX="13.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сортировать по"
               wrappingWidth="119.13671875"/>
         <Text layoutX="154.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Столбец"
@@ -28,7 +28,7 @@
             </font>
         </Text>
         <Button fx:id="okButton" layoutX="171.0" layoutY="255.0" mnemonicParsing="false" prefHeight="52.0"
-                prefWidth="119.0" text="OK"/>
+                prefWidth="119.0" text="OK" onAction="#confirm"/>
         <Button fx:id="cancelButton" layoutX="406.0" layoutY="255.0" mnemonicParsing="false" prefHeight="52.0"
                 prefWidth="119.0" text="Cancel" onAction="#cancel"/>
         <Text layoutX="322.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Действие"
@@ -37,7 +37,7 @@
                 <Font size="14.0"/>
             </font>
         </Text>
-        <Text layoutX="504.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Параметр" visible="false"
+        <Text layoutX="504.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Параметр" visible="true"
               wrappingWidth="119.13672396540642">
             <font>
                 <Font size="14.0"/>
