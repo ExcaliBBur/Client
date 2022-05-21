@@ -1,8 +1,6 @@
 package Controllers;
 
-import Exceptions.InputException;
 import Interaction.Parser;
-import Interaction.Sender;
 import Models.*;
 import Realisation.ClientDTO;
 import Realisation.HashPassword;
@@ -18,12 +16,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class LoginScreenController {
-    private StorageListener listener;
-    private Sender sender;
+public class LoginScreenController extends Controller {
 
     @FXML
     //TODO Честно, не знаю пока, что там будет.
@@ -58,50 +52,17 @@ public class LoginScreenController {
                 Arrays.asList(Serializer.serialize(user))), false,
                 null));
 
-        sender.sendResponse(data);
+        this.getSender().sendResponse(data);
 
-        ServerDTO<City> answer = this.blockAuth(listener);
+        ServerDTO<City> answer = this.blockGetAnswer();
 
         if (answer != null) {
             if (answer.isSuccess()) {
-                this.changeScreen(user, listener, answer);
+                this.changeScreen(user, this.getListener(), answer);
             } else {
-                alert(new String(answer.getMessage()));
+                alert(new String(answer.getMessage()), Alert.AlertType.ERROR);
             }
         }
-    }
-
-    private void alert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private ServerDTO<City> blockAuth(StorageListener listener) {
-        ReentrantReadWriteLock.ReadLock readLock = listener.getLock().readLock();
-        ServerDTO<City> serverDTO;
-        long currentTime = System.currentTimeMillis();
-
-        do {
-            readLock.lock();
-            serverDTO = listener.getNextAnswer();
-            readLock.unlock();
-        } while (serverDTO == null && (System.currentTimeMillis() - currentTime < 1000));
-
-        if (serverDTO == null) {
-            alert(new InputException.ServerUnavailableException().getMessage());
-        }
-
-        return serverDTO;
-    }
-
-    public void setSender(Sender sender) {
-        this.sender = sender;
-    }
-
-    public void setListener(StorageListener listener) {
-        this.listener = listener;
     }
 
     private void changeScreen(User user, StorageListener listener, ServerDTO<City> answer) {
@@ -118,7 +79,7 @@ public class LoginScreenController {
 
             MainScreenController controller = preset.getController();
             controller.setUser(user);
-            controller.setSender(sender);
+            controller.setSender(this.getSender());
             controller.setListener(listener);
 
             controller.updateContents(answer.getCollection());

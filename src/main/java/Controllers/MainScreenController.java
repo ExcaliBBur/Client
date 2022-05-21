@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 public class MainScreenController extends StorageController<City> {
     private final ObservableList<Rule> ruleList = FXCollections.observableArrayList();
     private final ObservableList<City> sortedCityList = FXCollections.observableArrayList();
-    private StorageListener listener;
     private User user;
 
     @FXML
@@ -150,10 +149,6 @@ public class MainScreenController extends StorageController<City> {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void setListener(StorageListener listener) {
-        this.listener = listener;
     }
 
     //TODO СТОИТ ЗАДУМАТЬСЯ НАД ТЕМ, ЧТОБЫ ОБЪЕДИНИТЬ ВСЕ СЕТТЕРЫ В КАКОЙ-НИБУДЬ МЕТОД, КОТОРЫЙ БЫ УСТАНАВЛИВАЛ ВСЕ ТРЕБУЕМЫЕ ЗНАЧЕНИЯ.
@@ -285,31 +280,6 @@ public class MainScreenController extends StorageController<City> {
         return Parser.parseTo(new ClientDTO(new Command.CommandData(keyWord, arguments), false, this.user));
     }
 
-    private void alert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private ServerDTO<City> blockGetAnswer() {
-        ReentrantReadWriteLock.ReadLock readLock = listener.getLock().readLock();
-        ServerDTO<City> serverDTO;
-        long currentTime = System.currentTimeMillis();
-
-        do {
-            readLock.lock();
-            serverDTO = listener.getNextAnswer();
-            readLock.unlock();
-        } while (serverDTO == null && (System.currentTimeMillis() - currentTime < 1000));
-
-        if (serverDTO == null) {
-            alert(new InputException.ServerUnavailableException().getMessage());
-        }
-
-        return serverDTO;
-    }
-
     @FXML
     private void remove() {
         try {
@@ -324,7 +294,7 @@ public class MainScreenController extends StorageController<City> {
                 ServerDTO<City> serverDTO = this.blockGetAnswer();
 
                 if (serverDTO != null && !serverDTO.isSuccess()) {
-                    alert(new String(serverDTO.getMessage()));
+                    alert(new String(serverDTO.getMessage()), Alert.AlertType.ERROR);
                 }
             } else {
                 throw new ArrayIndexOutOfBoundsException();
@@ -343,7 +313,7 @@ public class MainScreenController extends StorageController<City> {
         ServerDTO<City> serverDTO = this.blockGetAnswer();
 
         if (serverDTO != null && !serverDTO.isSuccess()) {
-            alert(new String(serverDTO.getMessage()));
+            alert(new String(serverDTO.getMessage()), Alert.AlertType.ERROR);
         }
     }
 
@@ -362,7 +332,7 @@ public class MainScreenController extends StorageController<City> {
         stage.setScene(new Scene(root));
 
         loginScreenController.setSender(this.getSender());
-        loginScreenController.setListener(listener);
+        loginScreenController.setListener(this.getListener());
 
         stage.show();
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
@@ -390,7 +360,7 @@ public class MainScreenController extends StorageController<City> {
                     object.getGovernor().setInputHumanName(this.humanNameInput.getText());
                     return object;
                 } catch (InputException e) {
-                    alert(e.getMessage());
+                    alert(e.getMessage(), Alert.AlertType.ERROR);
                 }
                 return null;
             };
@@ -412,7 +382,7 @@ public class MainScreenController extends StorageController<City> {
                     this.getSender().sendResponse(data);
                     ServerDTO<City> serverDTO = this.blockGetAnswer();
                     if (serverDTO != null && !serverDTO.isSuccess()) {
-                        alert(new String(serverDTO.getMessage()));
+                        alert(new String(serverDTO.getMessage()), Alert.AlertType.ERROR);
                     }
                 }
             } catch (ArrayIndexOutOfBoundsException ignored) {
