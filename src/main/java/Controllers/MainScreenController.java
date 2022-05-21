@@ -5,6 +5,7 @@ import Interaction.Parser;
 import Interfaces.IFormer;
 import Models.*;
 import Realisation.ClientDTO;
+import Realisation.CommandManager;
 import Realisation.StorageListener;
 import Utilities.Serializer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 public class MainScreenController extends StorageController<City> {
     private final ObservableList<Rule> ruleList = FXCollections.observableArrayList();
     private final ObservableList<City> sortedCityList = FXCollections.observableArrayList();
+    private CommandManager commandManager;
     private User user;
 
     @FXML
@@ -149,6 +151,10 @@ public class MainScreenController extends StorageController<City> {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setCommandManager(CommandManager commandManager) {
+        this.commandManager = commandManager;
     }
 
     //TODO СТОИТ ЗАДУМАТЬСЯ НАД ТЕМ, ЧТОБЫ ОБЪЕДИНИТЬ ВСЕ СЕТТЕРЫ В КАКОЙ-НИБУДЬ МЕТОД, КОТОРЫЙ БЫ УСТАНАВЛИВАЛ ВСЕ ТРЕБУЕМЫЕ ЗНАЧЕНИЯ.
@@ -277,7 +283,7 @@ public class MainScreenController extends StorageController<City> {
     }
 
     private byte[] transformData(String keyWord, List<String> arguments) {
-        return Parser.parseTo(new ClientDTO(new Command.CommandData(keyWord, arguments), false, this.user));
+        return Parser.parseTo(new ClientDTO(new Command.CommandData(keyWord, arguments), true, this.user));
     }
 
     @FXML
@@ -301,6 +307,29 @@ public class MainScreenController extends StorageController<City> {
             }
         } catch (ArrayIndexOutOfBoundsException ignored) {
 
+        }
+    }
+
+    @FXML
+    private void executeScript() {
+        try {
+            FXMLLoader preset = new FXMLLoader();
+            URL xml = getClass().getResource("/ExecuteScriptScreen.fxml");
+            preset.setLocation(xml);
+
+            Parent root = preset.load();
+            Stage additionalStage = new Stage();
+            additionalStage.setScene(new Scene(root));
+            additionalStage.initModality(Modality.APPLICATION_MODAL);
+
+            ExecuteScriptScreenController controller = preset.getController();
+            controller.setCommandManager(commandManager);
+            controller.setUser(user);
+            controller.setSender(this.getSender());
+
+            additionalStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

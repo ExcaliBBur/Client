@@ -1,5 +1,1 @@
-show
-show
-show
-add
-1
+clear

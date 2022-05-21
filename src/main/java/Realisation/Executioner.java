@@ -15,10 +15,7 @@ import java.util.Arrays;
  * @param <T> type of objects to work with
  */
 public class Executioner<T extends Collectables> {
-    private User userToCheck;
-    private User confirmedUser;
-
-    private final IFormer<User> userFormer;
+    private final User user;
     private final IFormer<T> iFormer;
     private final CommandManager commandManager;
 
@@ -28,8 +25,8 @@ public class Executioner<T extends Collectables> {
      * @param iFormer        object former
      * @param commandManager command data
      */
-    public Executioner(IFormer<User> userFormer, IFormer<T> iFormer, CommandManager commandManager) {
-        this.userFormer = userFormer;
+    public Executioner(User user, IFormer<T> iFormer, CommandManager commandManager) {
+        this.user = user;
         this.iFormer = iFormer;
         this.commandManager = commandManager;
     }
@@ -54,29 +51,15 @@ public class Executioner<T extends Collectables> {
         }
 
         if (commandManager.getCommands().containsKey(command)) {
-
             if (this.getCommandManager().getCommands().get(command).getArgs()
                     .contains(Command.Argument.OBJECT)) {
                 String object = Serializer.serialize(this.getIFormer().formObj());
                 arguments.add(object);
-            } else if (this.getCommandManager().getCommands().get(command).getArgs()
-                    .contains(Command.Argument.USER)) {
-                this.setUserToCheck(userFormer.formObj());
-                arguments.add(Serializer.serialize(getUserToCheck()));
             }
 
             if (Validator.validate(this.getCommandManager().getCommands().get(command).getArgs(), arguments)) {
-                if (commandManager.getClientCommands().containsKey(command)) {
-                    System.out.println(commandManager.getClientCommands().get(command).doOption(arguments));
-                    return null;
-                } else {
-                    if (userToCheck != null || confirmedUser != null) {
-                        return new ClientDTO(new Command.CommandData(command,
-                                arguments), confirmedUser);
-                    } else {
-                        throw new InputException.NotAuthorizedException();
-                    }
-                }
+                return new ClientDTO(new Command.CommandData(command,
+                        arguments), user);
             } else {
                 throw new InputException.ArgumentsException();
             }
@@ -100,17 +83,5 @@ public class Executioner<T extends Collectables> {
 
     public CommandManager getCommandManager() {
         return commandManager;
-    }
-
-    public User getUserToCheck() {
-        return userToCheck;
-    }
-
-    public void setUserToCheck(User userToCheck) {
-        this.userToCheck = userToCheck;
-    }
-
-    public void setConfirmedUser(User confirmedUser) {
-        this.confirmedUser = confirmedUser;
     }
 }

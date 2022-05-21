@@ -3,6 +3,7 @@ package Controllers;
 import Interaction.Parser;
 import Models.*;
 import Realisation.ClientDTO;
+import Realisation.CommandManager;
 import Realisation.HashPassword;
 import Realisation.StorageListener;
 import Utilities.Serializer;
@@ -49,7 +50,7 @@ public class LoginScreenController extends Controller {
     public void action(String command) {
         User user = new User(name.getText(), new HashPassword().hash(password.getText()));
         byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(command,
-                Arrays.asList(Serializer.serialize(user))), false,
+                Arrays.asList(Serializer.serialize(user))), true,
                 null));
 
         this.getSender().sendResponse(data);
@@ -81,6 +82,7 @@ public class LoginScreenController extends Controller {
             controller.setUser(user);
             controller.setSender(this.getSender());
             controller.setListener(listener);
+            controller.setCommandManager(new CommandManager(answer.getCommandData()));
 
             controller.updateContents(answer.getCollection());
 

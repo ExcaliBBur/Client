@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="79.0"
+      prefWidth="337.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.ExecuteScriptScreenController">
+    <children>
+        <TextField fx:id="filesPath" layoutX="35.0" layoutY="14.0" prefHeight="25.0" prefWidth="267.0"
+                   promptText="File path"/>
+        <Button fx:id="okButton" layoutX="74.0" layoutY="47.0" mnemonicParsing="false" prefHeight="25.0"
+                prefWidth="77.0" text="OK" onAction="#confirm"/>
+        <Button fx:id="cancelButton" layoutX="185.0" layoutY="47.0" mnemonicParsing="false" prefHeight="25.0"
+                prefWidth="77.0" text="Cancel" onAction="#cancel"/>
+    </children>
+</Pane>
