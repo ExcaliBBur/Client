@@ -34,7 +34,6 @@ public class Receiver {
             byte[] array = new byte[4096];
             DatagramPacket datagramPacket = new DatagramPacket(array, array.length);
             try {
-                datagramSocket.setSoTimeout(2000);
                 datagramSocket.receive(datagramPacket);
             } catch (SocketTimeoutException e) {
                 throw new InputException.ServerUnavailableException();

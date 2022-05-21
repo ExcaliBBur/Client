@@ -43,22 +43,22 @@ public class StorageListener extends Listener<City> {
                     do {
                         dtoWrapper = (DTOWrapper) Parser.parseFrom(this.getReceiver().getResponse());
                         concatenator.write(dtoWrapper.getData());
+                        concatenator.flush();
                     } while (!dtoWrapper.isTerminating());
 
                     serverDTO = (ServerDTO<City>) Parser.parseFrom(concatenator.toByteArray());
                     concatenator.reset();
+
                     if (serverDTO.getDtoType().equals(ServerDTO.DTOType.RESPONSE)) {
                         writeLock.lock();
                         this.answersQueue.add(serverDTO);
-                        writeLock.unlock();
                     } else {
                         writeLock.lock();
                         this.getController().updateContents(serverDTO.getCollection());
-                        writeLock.unlock();
 
-                        //TODO ЭТО ПОКА ЧТО ЗАТЫЧКА, СТОИТ ПОДУМАТЬ, КАК ЛУЧШЕ ОФОРМИТЬ МОМЕНТ ПОДМЕНЫ СОДЕРЖИМОГО OBSERVABLE LIST.
                         //TODO REGISTER - LOGIN ЛОМАЕТ ВСЁ.
                     }
+                    writeLock.unlock();
                 } catch (InputException.ServerUnavailableException e) {
                     e.printStackTrace();
                 }

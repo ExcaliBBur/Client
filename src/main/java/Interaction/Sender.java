@@ -28,6 +28,7 @@ public class Sender {
             byte[] array = new byte[4096];
             DatagramPacket datagramPacket = new DatagramPacket(array, array.length, this.address);
             datagramPacket.setData(data);
+
             this.channel.send(datagramPacket);
         } catch (IOException e) {
             e.printStackTrace();

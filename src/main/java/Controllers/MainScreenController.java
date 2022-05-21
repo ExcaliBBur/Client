@@ -20,8 +20,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -279,6 +281,35 @@ public class MainScreenController extends StorageController<City> {
         this.fillCityTable();
     }
 
+    private byte[] transformData(String keyWord, List<String> arguments) {
+        return Parser.parseTo(new ClientDTO(new Command.CommandData(keyWord, arguments), false, this.user));
+    }
+
+    private void alert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private ServerDTO<City> blockGetAnswer() {
+        ReentrantReadWriteLock.ReadLock readLock = listener.getLock().readLock();
+        ServerDTO<City> serverDTO;
+        long currentTime = System.currentTimeMillis();
+
+        do {
+            readLock.lock();
+            serverDTO = listener.getNextAnswer();
+            readLock.unlock();
+        } while (serverDTO == null && (System.currentTimeMillis() - currentTime < 1000));
+
+        if (serverDTO == null) {
+            alert(new InputException.ServerUnavailableException().getMessage());
+        }
+
+        return serverDTO;
+    }
+
     @FXML
     private void remove() {
         try {
@@ -286,51 +317,34 @@ public class MainScreenController extends StorageController<City> {
 
             if (id >= 0) {
                 this.contentTable.getSelectionModel().clearSelection();
-                byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData("remove_by_id", Arrays
-                        .asList(Serializer.serialize(this.getCollection().get(id).getId()))), false,
-                        this.user));
+                byte[] data = this.transformData("remove_by_id", Arrays
+                        .asList(Serializer.serialize(this.getCollection().get(id).getId())));
 
                 this.getSender().sendResponse(data);
                 ServerDTO<City> serverDTO = this.blockGetAnswer();
 
-                //TODO SOUT ERROR MESSAGE!
+                if (serverDTO != null && !serverDTO.isSuccess()) {
+                    alert(new String(serverDTO.getMessage()));
+                }
             } else {
                 throw new ArrayIndexOutOfBoundsException();
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+        } catch (ArrayIndexOutOfBoundsException ignored) {
 
-            alert.setTitle("ERROR!");
-            alert.setHeaderText(null);
-            alert.setContentText("Dick!");
-            alert.showAndWait();
-
-            //TODO ERROR!
         }
     }
 
     @FXML
     private void clear() {
         this.contentTable.getSelectionModel().clearSelection();
-        byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData("clear", Arrays.asList()),
-                false, this.user));
+        byte[] data = this.transformData("clear", null);
 
         this.getSender().sendResponse(data);
         ServerDTO<City> serverDTO = this.blockGetAnswer();
 
-        //TODO SOUT ERROR MESSAGE!
-    }
-
-    private ServerDTO<City> blockGetAnswer() {
-        ReentrantReadWriteLock.ReadLock readLock = this.listener.getLock().readLock();
-        ServerDTO<City> serverDTO;
-        do {
-            readLock.lock();
-            serverDTO = listener.getNextAnswer();
-            readLock.unlock();
-        } while (serverDTO == null);
-
-        return serverDTO;
+        if (serverDTO != null && !serverDTO.isSuccess()) {
+            alert(new String(serverDTO.getMessage()));
+        }
     }
 
     @FXML
@@ -340,70 +354,69 @@ public class MainScreenController extends StorageController<City> {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL xml = getClass().getResource("/LoginScreen.fxml");
         fxmlLoader.setLocation(xml);
-        Stage primaryStage = new Stage();
+        Stage stage = new Stage();
         Parent root = fxmlLoader.load();
 
         LoginScreenController loginScreenController = fxmlLoader.getController();
         fxmlLoader.setController(loginScreenController);
-        primaryStage.setScene(new Scene(root));
+        stage.setScene(new Scene(root));
 
         loginScreenController.setSender(this.getSender());
-        primaryStage.show();
+        loginScreenController.setListener(listener);
 
-        listener.interrupt();
+        stage.show();
+        stage.setOnCloseRequest(windowEvent -> System.exit(0));
     }
 
     @FXML
     private void doSomething() {
         RadioButton rb = (RadioButton) commandGroup.getSelectedToggle();
-        IFormer<City> iFormer = () -> {
+
+        if (rb != null) {
+            IFormer<City> iFormer = () -> {
+                try {
+                    City object = new City();
+                    object.setInputName(this.nameInput.getText());
+                    object.setCoordinates(new City.Coordinates());
+                    object.getCoordinates().setInputFirstCoordinates(this.xInput.getText());
+                    object.getCoordinates().setInputSecondCoordinates(this.yInput.getText());
+                    object.setInputArea(this.areaInput.getText());
+                    object.setInputPopulation(this.populationInput.getText());
+                    object.setInputMeters(this.metersInput.getText());
+                    object.setInputClimate(this.climateInput.getText());
+                    object.setInputGovernment(this.governmentInput.getText());
+                    object.setInputStandardOfLiving(this.standardOfLivingInput.getText());
+                    object.setGovernor(new City.Human());
+                    object.getGovernor().setInputHumanName(this.humanNameInput.getText());
+                    return object;
+                } catch (InputException e) {
+                    alert(e.getMessage());
+                }
+                return null;
+            };
+
             try {
-                City object = new City();
-                object.setInputName(this.nameInput.getText());
-                object.setCoordinates(new City.Coordinates());
-                object.getCoordinates().setInputFirstCoordinates(this.xInput.getText());
-                object.getCoordinates().setInputSecondCoordinates(this.yInput.getText());
-                object.setInputArea(this.areaInput.getText());
-                object.setInputPopulation(this.populationInput.getText());
-                object.setInputMeters(this.metersInput.getText());
-                object.setInputClimate(this.climateInput.getText());
-                object.setInputGovernment(this.governmentInput.getText());
-                object.setInputStandardOfLiving(this.standardOfLivingInput.getText());
-                object.setGovernor(new City.Human());
-                object.getGovernor().setInputHumanName(this.humanNameInput.getText());
-                return object;
-            } catch (InputException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
+                City city = iFormer.formObj();
 
-                alert.setTitle("ERROR!");
-                alert.setHeaderText(null);
-                alert.setContentText("Dick!");
-                alert.showAndWait();
+                if (city != null) {
+                    byte[] data;
+                    if (rb.getText().equals("EDIT")) {
+                        int id = this.contentTable.getSelectionModel().getSelectedIndex();
+                        data = this.transformData("update", new ArrayList<>(Arrays.asList(Integer
+                                .toString(this.getCollection().get(id).getId()), Serializer.serialize(city))));
+                    } else {
+                        data = this.transformData(rb.getText().toLowerCase().replace(" ", "_"),
+                                Arrays.asList(Serializer.serialize(city)));
+                    }
 
-                //TODO ERROR!
-            }
-            return null;
-        };
+                    this.getSender().sendResponse(data);
+                    ServerDTO<City> serverDTO = this.blockGetAnswer();
+                    if (serverDTO != null && !serverDTO.isSuccess()) {
+                        alert(new String(serverDTO.getMessage()));
+                    }
+                }
+            } catch (ArrayIndexOutOfBoundsException ignored) {
 
-        //TODO ЧТО-НИБУДЬ ПРИДУМАТЬ
-
-        City city = iFormer.formObj();
-
-        if (city != null) {
-            byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(rb.getText().toLowerCase()
-                    .replace(" ", "_"), Arrays.asList(Serializer.serialize(city))), false,
-                    this.user));
-
-            this.getSender().sendResponse(data);
-            ServerDTO<City> serverDTO = this.blockGetAnswer();
-
-            if (!serverDTO.isSuccess()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-                alert.setTitle("SOMETHING WENT WRONG!");
-                alert.setHeaderText(null);
-                alert.setContentText(new String(serverDTO.getMessage()));
-                alert.showAndWait();
             }
         }
     }
@@ -446,25 +459,14 @@ public class MainScreenController extends StorageController<City> {
             sortFilterController.setController(this);
             sortFilterController.setPurpose(SortFilterController.Option.EDIT);
 
-            int id = this.ruleTable.getSelectionModel().getFocusedIndex();
-            if (id >= 0) {
-                sortFilterController.setID(this.ruleTable.getSelectionModel().getFocusedIndex());
-            } else {
-                throw new ArrayIndexOutOfBoundsException();
-            }
+            int id = this.ruleTable.getSelectionModel().getSelectedIndex();
+            sortFilterController.setID(id);
 
             additionalStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+        } catch (ArrayIndexOutOfBoundsException ignored) {
 
-            alert.setTitle("ERROR!");
-            alert.setHeaderText(null);
-            alert.setContentText("Dick!");
-            alert.showAndWait();
-
-            //TODO ERROR!
         }
     }
 
@@ -475,15 +477,8 @@ public class MainScreenController extends StorageController<City> {
             this.ruleTable.getItems().setAll(ruleList);
 
             fillCityTable();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+        } catch (ArrayIndexOutOfBoundsException ignored) {
 
-            alert.setTitle("ERROR!");
-            alert.setHeaderText(null);
-            alert.setContentText("Dick!");
-            alert.showAndWait();
-
-            //TODO ERROR!
         }
     }
 }

@@ -16,7 +16,9 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Main class
@@ -50,9 +52,15 @@ public class Client extends Application {
         Sender sender = new Sender(new Registrator().register(), new InetSocketAddress(InetAddress
                 .getByName("localhost"), 6666));
 
+        ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+        StorageListener listener = new StorageListener(sender.getChannel(), new LinkedList<>(), lock);
+        listener.start();
+
         loginScreenController.setSender(sender);
+        loginScreenController.setListener(listener);
 
         primaryStage.show();
+        primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
     }
 
     public static class Registrator {

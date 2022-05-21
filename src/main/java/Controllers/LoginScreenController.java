@@ -1,5 +1,6 @@
 package Controllers;
 
+import Exceptions.InputException;
 import Interaction.Parser;
 import Interaction.Sender;
 import Models.*;
@@ -21,6 +22,7 @@ import java.util.LinkedList;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LoginScreenController {
+    private StorageListener listener;
     private Sender sender;
 
     @FXML
@@ -51,48 +53,55 @@ public class LoginScreenController {
     //TODO ДОБАВИТЬ ПРОВЕРКУ НЕПУСТОГО ЛОГИНА
 
     public void action(String command) {
-        ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
         User user = new User(name.getText(), new HashPassword().hash(password.getText()));
         byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(command,
                 Arrays.asList(Serializer.serialize(user))), false,
                 null));
 
-        StorageListener listener = new StorageListener(this.sender.getChannel(), new LinkedList<>(), lock);
-        listener.start();
         sender.sendResponse(data);
 
-        ServerDTO<City> answer = this.blockAuth(listener, lock);
+        ServerDTO<City> answer = this.blockAuth(listener);
 
-        if (answer.isSuccess()) {
-            this.changeScreen(user, listener, answer);
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-
-            alert.setTitle("ERROR!");
-            alert.setHeaderText(null);
-            alert.setContentText("Dick!");
-            alert.showAndWait();
-
-            //TODO ERROR!
-
-            listener.interrupt();
+        if (answer != null) {
+            if (answer.isSuccess()) {
+                this.changeScreen(user, listener, answer);
+            } else {
+                alert(new String(answer.getMessage()));
+            }
         }
     }
 
-    private ServerDTO<City> blockAuth(StorageListener listener, ReentrantReadWriteLock lock) {
-        ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
+    private void alert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private ServerDTO<City> blockAuth(StorageListener listener) {
+        ReentrantReadWriteLock.ReadLock readLock = listener.getLock().readLock();
         ServerDTO<City> serverDTO;
+        long currentTime = System.currentTimeMillis();
+
         do {
             readLock.lock();
             serverDTO = listener.getNextAnswer();
             readLock.unlock();
-        } while (serverDTO == null);
+        } while (serverDTO == null && (System.currentTimeMillis() - currentTime < 1000));
+
+        if (serverDTO == null) {
+            alert(new InputException.ServerUnavailableException().getMessage());
+        }
 
         return serverDTO;
     }
 
     public void setSender(Sender sender) {
         this.sender = sender;
+    }
+
+    public void setListener(StorageListener listener) {
+        this.listener = listener;
     }
 
     private void changeScreen(User user, StorageListener listener, ServerDTO<City> answer) {
