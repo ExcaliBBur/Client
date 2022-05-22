@@ -45,7 +45,8 @@ public class ResourceSpanish extends ListResourceBundle {
             {"none", "Ninguno"},
             {"sort_increase", "Aumento de clasificación"},
             {"sort_decrease", "Ordenar disminución"},
-            {"files_path", "Ruta de archivos"}
+            {"files_path", "Ruta de archivos"},
+            {"username", "Proprietario"}
     };
 
     public Object[][] getContents() {

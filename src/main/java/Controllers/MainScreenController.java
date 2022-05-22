@@ -325,6 +325,7 @@ public class MainScreenController extends StorageController<City> {
         this.addButton.textProperty().bind(Client.resourceFactory.getStringBinding("add"));
         this.editButton.textProperty().bind(Client.resourceFactory.getStringBinding("edit"));
         this.removeRuleButton.textProperty().bind(Client.resourceFactory.getStringBinding("remove_rule"));
+        this.usernameColumn.textProperty().bind(Client.resourceFactory.getStringBinding("username"));
     }
 
     public void updateContents(Collection<City> collection) {

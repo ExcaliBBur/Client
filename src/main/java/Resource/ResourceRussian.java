@@ -45,7 +45,8 @@ public class ResourceRussian extends ListResourceBundle {
             {"none", "Ничего"},
             {"sort_increase", "Сортировка по возрастанию"},
             {"sort_decrease", "Сортировка по убыванию"},
-            {"files_path", "Расположение файла"}
+            {"files_path", "Расположение файла"},
+            {"username", "Хозяин"}
     };
 
     public Object[][] getContents() {

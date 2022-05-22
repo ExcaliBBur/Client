@@ -23,7 +23,8 @@ public class ResourceDefault extends ListResourceBundle {
             {"creation_date", "creation_date"},
             {"none", "none"},
             {"sort_increase", "sort_increase"},
-            {"sort_decrease", "sort_decrease"}
+            {"sort_decrease", "sort_decrease"},
+            {"username", "username"}
     };
 
     public Object[][] getContents() {
