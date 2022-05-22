@@ -194,6 +194,16 @@ public class Rule {
             public String getString(City city) {
                 return city.getGovernor().getHumanName();
             }
+        },
+        USERNAME("username"){
+            @Override
+            public Comparator<City> getComparator() {
+                return Comparator.comparing(City::getUsername);
+            }
+            @Override
+            public String getString(City city) {
+                return city.getUsername();
+            }
         };
 
         private String name;
