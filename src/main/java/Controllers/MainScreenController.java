@@ -3,10 +3,14 @@ package Controllers;
 import Exceptions.InputException;
 import Interaction.Parser;
 import Interfaces.IFormer;
+import Main.Client;
 import Models.*;
 import Realisation.ClientDTO;
 import Realisation.CommandManager;
+import Realisation.ObservableResourceFactory;
 import Realisation.StorageListener;
+import Resource.ResourceDefault;
+import Resource.ResourceRussian;
 import Utilities.Serializer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -16,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -84,10 +89,10 @@ public class MainScreenController extends StorageController<City> {
     private TableView<Rule> ruleTable;
 
     @FXML
-    private TableColumn<Rule, Rule.Column> columnColumn;
+    private TableColumn<Rule, String> columnColumn;
 
     @FXML
-    private TableColumn<Rule, Rule.Order> orderColumn;
+    private TableColumn<Rule, String> orderColumn;
 
     @FXML
     private TableColumn<Rule, String> parameterColumn;
@@ -148,6 +153,30 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     private TextField humanNameInput;
+
+    @FXML
+    private Text userText;
+
+    @FXML
+    private Button executeScriptButton;
+
+    @FXML
+    private Button clearButton;
+
+    @FXML
+    private Button removeButton;
+
+    @FXML
+    private TableColumn<Rule, Rule> ruleHeader;
+
+    @FXML
+    private Button editButton;
+
+    @FXML
+    private Button addButton;
+
+    @FXML
+    private Button removeRuleButton;
 
     public void setUser(User user) {
         this.user = user;
@@ -211,11 +240,13 @@ public class MainScreenController extends StorageController<City> {
         humanNameColumn.setSortable(false);
 
         this.columnColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getColumn()));
+                new ReadOnlyObjectWrapper<>(Client.resourceFactory.getResources()
+                        .getString(cellData.getValue().getColumn().getName())));
         columnColumn.setSortable(false);
 
         this.orderColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getOrder()));
+                new ReadOnlyObjectWrapper<>(Client.resourceFactory.getResources()
+                        .getString(cellData.getValue().getOrder().getName())));
         this.orderColumn.setSortable(false);
 
         this.parameterColumn.setCellValueFactory(cellData ->
@@ -249,6 +280,51 @@ public class MainScreenController extends StorageController<City> {
                 this.humanNameInput.setText(this.getCollection().get(id).getGovernor().getHumanName());
             }
         });
+
+        this.userText.textProperty().bind(Client.resourceFactory.getStringBinding("username"));
+        this.nameInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("name"));
+        this.xInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("coordinate_x"));
+        this.yInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("coordinate_y"));
+        this.areaInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("area"));
+        this.populationInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("population"));
+        this.metersInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("meters"));
+        this.climateInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("climate"));
+        this.governmentInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("government"));
+        this.standardOfLivingInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("standard"));
+        this.humanNameInput.promptTextProperty().bind(Client.resourceFactory.getStringBinding("human"));
+        this.okButton.textProperty().bind(Client.resourceFactory.getStringBinding("ok"));
+        this.addRadioButton.textProperty().bind(Client.resourceFactory.getStringBinding("add"));
+        this.editRadioButton.textProperty().bind(Client.resourceFactory.getStringBinding("edit"));
+        this.addIfMinRadioButton.textProperty().bind(Client.resourceFactory.getStringBinding("add_if_min"));
+        this.removeGreaterRadioButton.textProperty().bind(Client.resourceFactory
+                .getStringBinding("remove_greater"));
+        this.removeLowerRadioButton.textProperty().bind(Client.resourceFactory.getStringBinding("remove_lower"));
+        this.idColumn.textProperty().bind(Client.resourceFactory.getStringBinding("id"));
+        this.nameColumn.textProperty().bind(Client.resourceFactory.getStringBinding("name"));
+        this.coordinatesColumn.textProperty().bind(Client.resourceFactory.getStringBinding("coordinates"));
+        this.xColumn.textProperty().bind(Client.resourceFactory.getStringBinding("x"));
+        this.yColumn.textProperty().bind(Client.resourceFactory.getStringBinding("y"));
+        this.creationDateColumn.textProperty().bind(Client.resourceFactory.getStringBinding("creation_date"));
+        this.areaColumn.textProperty().bind(Client.resourceFactory.getStringBinding("area"));
+        this.populationColumn.textProperty().bind(Client.resourceFactory.getStringBinding("population"));
+        this.metersAboveSeaLevelColumn.textProperty().bind(Client.resourceFactory.getStringBinding("meters"));
+        this.climateColumn.textProperty().bind(Client.resourceFactory.getStringBinding("climate"));
+        this.governmentColumn.textProperty().bind(Client.resourceFactory.getStringBinding("government"));
+        this.standardOfLivingColumn.textProperty().bind(Client.resourceFactory.getStringBinding("standard"));
+        this.governorColumn.textProperty().bind(Client.resourceFactory.getStringBinding("governor"));
+        this.humanNameColumn.textProperty().bind(Client.resourceFactory.getStringBinding("human"));
+        this.logoutButton.textProperty().bind(Client.resourceFactory.getStringBinding("logout"));
+        this.executeScriptButton.textProperty().bind(Client.resourceFactory
+                .getStringBinding("execute_script"));
+        this.clearButton.textProperty().bind(Client.resourceFactory.getStringBinding("clear"));
+        this.removeButton.textProperty().bind(Client.resourceFactory.getStringBinding("remove"));
+        this.ruleHeader.textProperty().bind(Client.resourceFactory.getStringBinding("sorting_and_filtration"));
+        this.columnColumn.textProperty().bind(Client.resourceFactory.getStringBinding("column"));
+        this.orderColumn.textProperty().bind(Client.resourceFactory.getStringBinding("order"));
+        this.parameterColumn.textProperty().bind(Client.resourceFactory.getStringBinding("parameter"));
+        this.addButton.textProperty().bind(Client.resourceFactory.getStringBinding("add"));
+        this.editButton.textProperty().bind(Client.resourceFactory.getStringBinding("edit"));
+        this.removeRuleButton.textProperty().bind(Client.resourceFactory.getStringBinding("remove_rule"));
     }
 
     public void updateContents(Collection<City> collection) {
@@ -398,14 +474,14 @@ public class MainScreenController extends StorageController<City> {
                 City city = iFormer.formObj();
 
                 if (city != null) {
+                    String defaultName = Client.resourceFactory.getLocale(rb.getText(), new ResourceDefault());
                     byte[] data;
-                    if (rb.getText().equals("EDIT")) {
+                    if (defaultName.equals("edit")) {
                         int id = this.contentTable.getSelectionModel().getSelectedIndex();
                         data = this.transformData("update", new ArrayList<>(Arrays.asList(Integer
                                 .toString(this.getCollection().get(id).getId()), Serializer.serialize(city))));
                     } else {
-                        data = this.transformData(rb.getText().toLowerCase().replace(" ", "_"),
-                                Arrays.asList(Serializer.serialize(city)));
+                        data = this.transformData(defaultName, Arrays.asList(Serializer.serialize(city)));
                     }
 
                     this.getSender().sendResponse(data);

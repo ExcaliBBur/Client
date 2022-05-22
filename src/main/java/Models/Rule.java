@@ -1,6 +1,7 @@
 package Models;
 
 import java.util.Comparator;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 public class Rule {
@@ -53,7 +54,7 @@ public class Rule {
                 return city.getName();
             }
         },
-        X_COORDINATE("x") {
+        X_COORDINATE("coordinate_x") {
             @Override
             public Comparator<City> getComparator() {
                 return Comparator.comparingDouble(o -> o.getCoordinates().getFirstCoordinates());
@@ -64,7 +65,7 @@ public class Rule {
                 return Double.toString(city.getCoordinates().getFirstCoordinates());
             }
         },
-        Y_COORDINATE("y") {
+        Y_COORDINATE("coordinate_y") {
             @Override
             public Comparator<City> getComparator() {
                 return Comparator.comparing(o -> o.getCoordinates().getSecondCoordinates());
@@ -75,7 +76,7 @@ public class Rule {
                 return Double.toString(city.getCoordinates().getSecondCoordinates());
             }
         },
-        CREATION_DATE("creationDate") {
+        CREATION_DATE("creation_date") {
             @Override
             public Comparator<City> getComparator() {
                 return Comparator.comparing(o -> o.getCreationDate().toString());
@@ -162,7 +163,7 @@ public class Rule {
                 }
             }
         },
-        STANDARD_OF_LIVING("standardOfLiving") {
+        STANDARD_OF_LIVING("standard") {
             @Override
             public Comparator<City> getComparator() {
                 return Comparator.comparing(o -> {
@@ -183,7 +184,7 @@ public class Rule {
                 }
             }
         },
-        HUMAN_NAME("humanName") {
+        HUMAN_NAME("human") {
             @Override
             public Comparator<City> getComparator() {
                 return Comparator.comparing(o -> o.getGovernor().getHumanName());
@@ -195,7 +196,7 @@ public class Rule {
             }
         };
 
-        private final String name;
+        private String name;
 
         Column(String name) {
             this.name = name;
@@ -208,31 +209,49 @@ public class Rule {
         public String getName() {
             return name;
         }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public static Column getEnum(String value) {
+            for (Column column : values()) {
+                if (column.getName().equals(value)) return column;
+            }
+            return null;
+        }
+
+        public static Column getEnum(String value, ResourceBundle resourceBundle) {
+            for (Column column : values()) {
+                if (column.getName().equals(value)) return column;
+            }
+            return null;
+        }
     }
 
     public enum Order {
-        SORT_INCREASE("SORT_INCREASE") {
+        SORT_INCREASE("sort_increase") {
             @Override
             public Stream<City> doOption(Column column, String parameter, Stream<City> stream) {
                 return stream.filter(o -> column.getString(o).contains(parameter))
                         .sorted(column.getComparator());
             }
         },
-        SORT_DECREASE("SORT_DECREASE") {
+        SORT_DECREASE("sort_decrease") {
             @Override
             public Stream<City> doOption(Column column, String parameter, Stream<City> stream) {
                 return stream.filter(o -> column.getString(o).contains(parameter)).sorted(column
                         .getComparator().reversed());
             }
         },
-        NONE("NONE") {
+        NONE("none") {
             @Override
             public Stream<City> doOption(Column column, String parameter, Stream<City> stream) {
                 return stream.filter(o -> column.getString(o).contains(parameter));
             }
         };
 
-        private final String name;
+        private String name;
 
         Order(String name) {
             this.name = name;
@@ -242,6 +261,24 @@ public class Rule {
 
         public String getName() {
             return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public static Order getEnum(String value) {
+            for (Order order : values()) {
+                if (order.getName().equals(value)) return order;
+            }
+            return null;
+        }
+
+        public static Order getEnum(String value, ResourceBundle resourceBundle) {
+            for (Order order : values()) {
+                if (order.getName().equals(value)) return order;
+            }
+            return null;
         }
     }
 }

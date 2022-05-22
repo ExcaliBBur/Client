@@ -6,6 +6,10 @@ import Interaction.Parser;
 import Interaction.Receiver;
 import Interaction.Sender;
 import Realisation.*;
+import Resource.ResourceHungarian;
+import Resource.ResourcePortuguese;
+import Resource.ResourceRussian;
+import Resource.ResourceSpanish;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,28 +18,17 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Main class
  */
 public class Client extends Application {
-    private static boolean finished;
+    public static final ObservableResourceFactory resourceFactory = new ObservableResourceFactory();
 
     public static void main(String[] args) {
         Application.launch();
-    }
-
-    public static boolean isFinished() {
-        return finished;
-    }
-
-    public static void setFinished(boolean finished) {
-        Client.finished = finished;
     }
 
     @Override
@@ -84,6 +77,52 @@ public class Client extends Application {
             } while (!isCorrect);
             System.out.println("Сервер стартует на порте " + tmp);
             return datagramSocket;
+        }
+    }
+
+    public enum Languages {
+        RUSSIAN("Русский") {
+            @Override
+            public ListResourceBundle getResources() {
+                return new ResourceRussian();
+            }
+        },
+        SPANISH("Español") {
+            @Override
+            public ListResourceBundle getResources() {
+                return new ResourceSpanish();
+            }
+        },
+        HUNGARIAN("Magyar") {
+            @Override
+            public ListResourceBundle getResources() {
+                return new ResourceHungarian();
+            }
+        },
+        PORTUGUESE("Português") {
+            @Override
+            public ListResourceBundle getResources() {
+                return new ResourcePortuguese();
+            }
+        };
+
+        private final String name;
+
+        Languages(String name) {
+            this.name = name;
+        }
+
+        public abstract ListResourceBundle getResources();
+
+        public String getName() {
+            return name;
+        }
+
+        public static Languages getEnum(String value) {
+            for (Languages language : values()) {
+                if (language.getName().equals(value)) return language;
+            }
+            return null;
         }
     }
 }

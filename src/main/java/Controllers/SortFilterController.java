@@ -1,10 +1,17 @@
 package Controllers;
 
+import Main.Client;
 import Models.Rule;
+import Resource.ResourceDefault;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class SortFilterController {
     private MainScreenController controller;
@@ -12,10 +19,10 @@ public class SortFilterController {
     private int id;
 
     @FXML
-    private ComboBox<Rule.Column> columnBox;
+    private ComboBox<String> columnBox;
 
     @FXML
-    private ComboBox<Rule.Order> optionBox;
+    private ComboBox<String> optionBox;
 
     @FXML
     private TextField textField;
@@ -27,9 +34,42 @@ public class SortFilterController {
     private Button cancelButton;
 
     @FXML
+    private Text columnText;
+
+    @FXML
+    private Text actionText;
+
+    @FXML
+    private Text parameterText;
+
+    @FXML
+    private Label headerLabel;
+
+    @FXML
+    private Text sortText;
+
+    @FXML
+    public void initialize() {
+        Arrays.stream(Rule.Column.values()).forEach(x -> this.columnBox.getItems().add(Client.resourceFactory
+                .getResources().getString(x.getName())));
+
+        Arrays.stream(Rule.Order.values()).forEach(x -> this.optionBox.getItems().add(Client.resourceFactory
+                .getResources().getString(x.getName())));
+
+        this.sortText.textProperty().bind(Client.resourceFactory.getStringBinding("sort_text"));
+        this.columnText.textProperty().bind(Client.resourceFactory.getStringBinding("column"));
+        this.actionText.textProperty().bind(Client.resourceFactory.getStringBinding("order"));
+        this.parameterText.textProperty().bind(Client.resourceFactory.getStringBinding("parameter"));
+        this.headerLabel.textProperty().bind(Client.resourceFactory.getStringBinding("sorting_and_filtration"));
+        this.okButton.textProperty().bind(Client.resourceFactory.getStringBinding("ok"));
+        this.cancelButton.textProperty().bind(Client.resourceFactory.getStringBinding("cancel"));
+    }
+
+    @FXML
     public void confirm() {
-        Rule rule = new Rule(this.columnBox.getSelectionModel().getSelectedItem(), this.optionBox
-                .getSelectionModel().getSelectedItem(), this.textField.getText());
+        Rule rule = new Rule(Rule.Column.getEnum(Client.resourceFactory.getLocale(this.columnBox.getSelectionModel()
+                .getSelectedItem(), new ResourceDefault())), Rule.Order.getEnum(Client.resourceFactory.getLocale(this.
+                optionBox.getSelectionModel().getSelectedItem(), new ResourceDefault())), this.textField.getText());
 
         if (rule.getColumn() != null && rule.getOrder() != null) {
             switch (purpose) {
@@ -61,12 +101,6 @@ public class SortFilterController {
     @FXML
     public void cancel() {
         this.cancelButton.getScene().getWindow().hide();
-    }
-
-    @FXML
-    public void initialize() {
-        this.columnBox.getItems().addAll(Rule.Column.values());
-        this.optionBox.getItems().addAll(Rule.Order.values());
     }
 
     public enum Option {

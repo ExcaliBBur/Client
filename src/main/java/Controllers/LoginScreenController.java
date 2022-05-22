@@ -1,11 +1,10 @@
 package Controllers;
 
 import Interaction.Parser;
+import Main.Client;
 import Models.*;
-import Realisation.ClientDTO;
-import Realisation.CommandManager;
-import Realisation.HashPassword;
-import Realisation.StorageListener;
+import Realisation.*;
+import Resource.*;
 import Utilities.Serializer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,12 +16,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
 public class LoginScreenController extends Controller {
 
     @FXML
-    //TODO Честно, не знаю пока, что там будет.
-    private ComboBox<Button> languages;
+    private ComboBox<String> languages;
 
     @FXML
     private TextField name;
@@ -37,6 +36,12 @@ public class LoginScreenController extends Controller {
     private Button registerButton;
 
     @FXML
+    private Label loginField;
+
+    @FXML
+    private Label passwordField;
+
+    @FXML
     public void registration() {
         this.action("register");
     }
@@ -46,6 +51,22 @@ public class LoginScreenController extends Controller {
         this.action("login");
     }
     //TODO ДОБАВИТЬ ПРОВЕРКУ НЕПУСТОГО ЛОГИНА
+
+    @FXML
+    private void initialize() {
+        Client.resourceFactory.setResources(ResourceBundle.getBundle(ResourceRussian.class.getTypeName()));
+        Arrays.stream(Client.Languages.values()).forEach((x) -> this.languages.getItems().add(x.getName()));
+        this.languages.setValue(Client.Languages.RUSSIAN.getName());
+
+        languages.valueProperty().addListener((observable, oldValue, newValue) -> Client.resourceFactory
+                .setResources(ResourceBundle.getBundle(Client.Languages.getEnum(newValue).getResources().getClass()
+                        .getTypeName())));
+
+        loginField.textProperty().bind(Client.resourceFactory.getStringBinding("loginField"));
+        passwordField.textProperty().bind(Client.resourceFactory.getStringBinding("passwordField"));
+        loginButton.textProperty().bind(Client.resourceFactory.getStringBinding("loginButton"));
+        registerButton.textProperty().bind(Client.resourceFactory.getStringBinding("registerButton"));
+    }
 
     public void action(String command) {
         User user = new User(name.getText(), new HashPassword().hash(password.getText()));

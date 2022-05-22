@@ -5,9 +5,11 @@ import Interaction.Sender;
 import Realisation.StorageListener;
 import javafx.scene.control.Alert;
 
+import java.util.ListResourceBundle;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public abstract class Controller {
+    private ListResourceBundle locale;
     private Sender sender;
     private StorageListener listener;
 
@@ -25,6 +27,14 @@ public abstract class Controller {
 
     public void setListener(StorageListener listener) {
         this.listener = listener;
+    }
+
+    public ListResourceBundle getLocale() {
+        return locale;
+    }
+
+    public void setLocale(ListResourceBundle locale) {
+        this.locale = locale;
     }
 
     public void alert(String message, Alert.AlertType type) {

@@ -161,7 +161,8 @@
                                 <Font size="14.0"/>
                             </font>
                         </Button>
-                        <Text layoutX="96.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username"
+                        <Text fx:id="userText" layoutX="96.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Username"
                               textAlignment="CENTER" wrappingWidth="89.783203125">
                             <font>
                                 <Font size="18.0"/>
@@ -176,7 +177,7 @@
                         <TableView fx:id="ruleTable" layoutX="608.0" layoutY="709.0" prefHeight="200.0"
                                    prefWidth="276.0">
                             <columns>
-                                <TableColumn prefWidth="275.0" text="Sorting and Filtration">
+                                <TableColumn fx:id="ruleHeader" prefWidth="275.0" text="Sorting and Filtration">
                                     <columns>
                                         <TableColumn fx:id="columnColumn" prefWidth="94.0" text="Column"/>
                                         <TableColumn fx:id="orderColumn" prefWidth="89.0" text="Order"/>
