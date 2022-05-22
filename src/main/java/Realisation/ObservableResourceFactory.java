@@ -8,18 +8,29 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 public class ObservableResourceFactory {
+    private Languages currentLanguage;
     private final ObjectProperty<ResourceBundle> resources = new SimpleObjectProperty<>();
 
     public ObjectProperty<ResourceBundle> resourcesProperty() {
         return resources;
     }
 
-    public final ResourceBundle getResources() {
+    public ResourceBundle getResources() {
         return resourcesProperty().get();
     }
 
-    public final void setResources(ResourceBundle resources) {
+    public void setResources(ResourceBundle resources) {
         resourcesProperty().set(resources);
+    }
+
+    public void setLanguage(Languages language) {
+        this.currentLanguage = language;
+
+        this.setResources(language.getResources());
+    }
+
+    public Languages getLanguage() {
+        return this.currentLanguage;
     }
 
     public StringBinding getStringBinding(String key) {

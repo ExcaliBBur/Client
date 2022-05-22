@@ -54,13 +54,12 @@ public class LoginScreenController extends Controller {
 
     @FXML
     private void initialize() {
-        Client.resourceFactory.setResources(ResourceBundle.getBundle(ResourceRussian.class.getTypeName()));
-        Arrays.stream(Client.Languages.values()).forEach((x) -> this.languages.getItems().add(x.getName()));
-        this.languages.setValue(Client.Languages.RUSSIAN.getName());
+        Client.resourceFactory.setLanguage(Languages.RUSSIAN);
+        Arrays.stream(Languages.values()).forEach((x) -> this.languages.getItems().add(x.getName()));
+        this.languages.setValue(Languages.RUSSIAN.getName());
 
         languages.valueProperty().addListener((observable, oldValue, newValue) -> Client.resourceFactory
-                .setResources(ResourceBundle.getBundle(Client.Languages.getEnum(newValue).getResources().getClass()
-                        .getTypeName())));
+                .setLanguage(Languages.getEnum(newValue)));
 
         loginField.textProperty().bind(Client.resourceFactory.getStringBinding("loginField"));
         passwordField.textProperty().bind(Client.resourceFactory.getStringBinding("passwordField"));
@@ -71,8 +70,8 @@ public class LoginScreenController extends Controller {
     public void action(String command) {
         User user = new User(name.getText(), new HashPassword().hash(password.getText()));
         byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(command,
-                Arrays.asList(Serializer.serialize(user))), true,
-                null));
+                Arrays.asList(Serializer.serialize(user))), Client.resourceFactory.getLanguage(),
+                true, null));
 
         this.getSender().sendResponse(data);
 

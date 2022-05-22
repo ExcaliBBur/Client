@@ -7,11 +7,13 @@ import java.io.Serializable;
 
 public class ClientDTO implements Serializable {
     private Command.CommandData commandData;
+    private Languages language;
     private boolean isRequest;
     private User user;
 
-    public ClientDTO(Command.CommandData commandData, boolean isRequest, User user) {
+    public ClientDTO(Command.CommandData commandData, Languages language, boolean isRequest, User user) {
         this.commandData = commandData;
+        this.language = language;
         this.isRequest = isRequest;
         this.user = user;
     }
@@ -35,5 +37,9 @@ public class ClientDTO implements Serializable {
 
     public User getUser() {
         return user;
+    }
+
+    public Languages getLanguage() {
+        return language;
     }
 }

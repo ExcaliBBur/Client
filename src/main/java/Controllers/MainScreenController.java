@@ -6,6 +6,7 @@ import Interfaces.IFormer;
 import Main.Client;
 import Models.*;
 import Realisation.ClientDTO;
+import Realisation.Languages;
 import Resource.ResourceDefault;
 import Utilities.Serializer;
 import javafx.animation.ScaleTransition;
@@ -41,15 +42,13 @@ import java.util.stream.Stream;
 
 public class MainScreenController extends StorageController<City> {
     private final ObservableList<Rule> ruleList = FXCollections.observableArrayList();
-    private final ObservableList<City> sortedCityList = FXCollections.observableArrayList();
     private CommandManager commandManager;
     private User user;
-    private HashMap<Shape, Integer> shapeMap = new HashMap<>();
-    private List<City> list = new ArrayList<>();
+    private final HashMap<Shape, Integer> shapeMap = new HashMap<>();
     private boolean flag = true;
-    private HashMap<String, Color> colorHashMap = new HashMap<>();
-    private List<Integer> idList = new ArrayList<>();
-    private Canvas canvas = new Canvas(1280, 980);
+    private final HashMap<String, Color> colorHashMap = new HashMap<>();
+    private final List<Integer> idList = new ArrayList<>();
+    private final Canvas canvas = new Canvas(1280, 980);
 
     @FXML
     private AnchorPane secondMainScreen;
@@ -412,28 +411,31 @@ public class MainScreenController extends StorageController<City> {
         contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             int id = contentTable.getSelectionModel().getSelectedIndex();
             if (id != -1) {
-                this.nameInput.setText(this.getCollection().get(id).getName());
-                this.xInput.setText(this.getCollection().get(id).getCoordinates().getFirstCoordinates().toString());
-                this.yInput.setText(this.getCollection().get(id).getCoordinates().getSecondCoordinates().toString());
-                this.areaInput.setText(this.getCollection().get(id).getArea().toString());
-                this.populationInput.setText(this.getCollection().get(id).getPopulation().toString());
-                this.metersInput.setText(Integer.toString(this.getCollection().get(id).getMeters()));
+                this.nameInput.setText(this.contentTable.getItems().get(id).getName());
+                this.xInput.setText(this.contentTable.getItems().get(id).getCoordinates().getFirstCoordinates()
+                        .toString());
+                this.yInput.setText(this.contentTable.getItems().get(id).getCoordinates().getSecondCoordinates()
+                        .toString());
+                this.areaInput.setText(this.contentTable.getItems().get(id).getArea().toString());
+                this.populationInput.setText(this.contentTable.getItems().get(id).getPopulation().toString());
+                this.metersInput.setText(Integer.toString(this.contentTable.getItems().get(id).getMeters()));
                 try {
-                    this.climateInput.setText(this.getCollection().get(id).getClimate().getName());
+                    this.climateInput.setText(this.contentTable.getItems().get(id).getClimate().getName());
                 } catch (NullPointerException e) {
                     this.climateInput.setText("");
                 }
                 try {
-                    this.governmentInput.setText(this.getCollection().get(id).getGovernment().getName());
+                    this.governmentInput.setText(this.contentTable.getItems().get(id).getGovernment().getName());
                 } catch (NullPointerException e) {
                     this.governmentInput.setText("");
                 }
                 try {
-                    this.standardOfLivingInput.setText(this.getCollection().get(id).getStandardOfLiving().getName());
+                    this.standardOfLivingInput.setText(this.contentTable.getItems().get(id).getStandardOfLiving()
+                            .getName());
                 } catch (NullPointerException e) {
                     this.standardOfLivingInput.setText("");
                 }
-                this.humanNameInput.setText(this.getCollection().get(id).getGovernor().getHumanName());
+                this.humanNameInput.setText(this.contentTable.getItems().get(id).getGovernor().getHumanName());
             }
         });
 
@@ -498,8 +500,7 @@ public class MainScreenController extends StorageController<City> {
             stream = rule.transform(stream);
         }
 
-        this.sortedCityList.setAll(stream.collect(Collectors.toList()));
-        contentTable.getItems().setAll(sortedCityList);
+        contentTable.getItems().setAll(stream.collect(Collectors.toList()));
     }
 
     public void addRuleContents(Rule rule) {
@@ -517,7 +518,8 @@ public class MainScreenController extends StorageController<City> {
     }
 
     private byte[] transformData(String keyWord, List<String> arguments) {
-        return Parser.parseTo(new ClientDTO(new Command.CommandData(keyWord, arguments), true, this.user));
+        return Parser.parseTo(new ClientDTO(new Command.CommandData(keyWord, arguments), Client.resourceFactory
+                .getLanguage(), true, this.user));
     }
 
     @FXML
@@ -528,7 +530,7 @@ public class MainScreenController extends StorageController<City> {
             if (id >= 0) {
                 this.contentTable.getSelectionModel().clearSelection();
                 byte[] data = this.transformData("remove_by_id", Arrays
-                        .asList(Serializer.serialize(this.getCollection().get(id).getId())));
+                        .asList(Serializer.serialize(this.contentTable.getItems().get(id).getId())));
 
                 this.getSender().sendResponse(data);
                 ServerDTO<City> serverDTO = this.blockGetAnswer();
@@ -717,13 +719,13 @@ public class MainScreenController extends StorageController<City> {
 
     public void fillMap() {
         boolean contains = false;
-        Set keys = shapeMap.keySet();
+        Set<Shape> keys = shapeMap.keySet();
         for (Object key : keys) {
             secondMainScreen.getChildren().remove(key);
         }
         shapeMap.clear();
         if (flag) {
-            for (City city : sortedCityList) {
+            for (City city : this.getCollection()) {
                 if (colorHashMap.get(city.getUsername()) == null) {
                     Color c = Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255),
                             (int) (Math.random() * 255));
@@ -735,12 +737,15 @@ public class MainScreenController extends StorageController<City> {
                 }
             }
         }
-        list = sortedCityList.stream().sorted(Comparator.comparingInt(City::getArea).reversed())
+        List<City> list = this.getCollection().stream().sorted(Comparator.comparingInt(City::getArea).reversed())
                 .collect(Collectors.toList());
         for (City city : list) {
-            Shape circle = new Circle((city.getArea() / 50) * canvas.getScaleX(), colorHashMap.get(city.getUsername()));
-            circle.setLayoutX(canvas.getWidth() / 2 + (city.getCoordinates().getFirstCoordinates()) * canvas.getScaleX());
-            circle.setLayoutY(canvas.getHeight() / 2 + (city.getCoordinates().getSecondCoordinates()) * canvas.getScaleX());
+            Shape circle = new Circle(((float) city.getArea() / 50) * canvas.getScaleX(), colorHashMap
+                    .get(city.getUsername()));
+            circle.setLayoutX(canvas.getWidth() / 2 + (city.getCoordinates().getFirstCoordinates()) *
+                    canvas.getScaleX());
+            circle.setLayoutY(canvas.getHeight() / 2 + (city.getCoordinates().getSecondCoordinates()) *
+                    canvas.getScaleX());
             shapeMap.put(circle, city.getId());
             if (!idList.contains(city.getId())) {
                 idList.add(city.getId());
@@ -750,7 +755,7 @@ public class MainScreenController extends StorageController<City> {
             secondMainScreen.setOnScroll(this::mouseScroll);
             circle.setOnMouseClicked(this::mouseClicked);
             circle.setOnMouseEntered(this::mouseEntered);
-            if (circle.getLayoutY() - city.getArea() / 50 * canvas.getScaleX() - 82 > 0) {
+            if (circle.getLayoutY() - (float) city.getArea() / 50 * canvas.getScaleX() - 82 > 0) {
                 secondMainScreen.getChildren().add(circle);
             }
             if (flag && contains) {
@@ -769,7 +774,7 @@ public class MainScreenController extends StorageController<City> {
         int count = 0;
         Shape shape = (Shape) event.getSource();
         int id = shapeMap.get(shape);
-        for (City city : sortedCityList) {
+        for (City city : this.getCollection()) {
             count++;
             if (city.getId() == id) {
                 tabPane.getSelectionModel().select(0);
@@ -781,7 +786,7 @@ public class MainScreenController extends StorageController<City> {
     private void mouseEntered(MouseEvent event) {
         Shape shape = (Shape) event.getSource();
         int id = shapeMap.get(shape);
-        for (City city : sortedCityList) {
+        for (City city : this.getCollection()) {
             if (city.getId() == id) objectTable.getItems().setAll(city);
         }
     }
