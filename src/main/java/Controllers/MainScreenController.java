@@ -6,12 +6,9 @@ import Interfaces.IFormer;
 import Main.Client;
 import Models.*;
 import Realisation.ClientDTO;
-import Realisation.CommandManager;
-import Realisation.ObservableResourceFactory;
-import Realisation.StorageListener;
 import Resource.ResourceDefault;
-import Resource.ResourceRussian;
 import Utilities.Serializer;
+import javafx.animation.ScaleTransition;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,18 +16,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import Realisation.CommandManager;
+import javafx.scene.layout.AnchorPane;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +44,25 @@ public class MainScreenController extends StorageController<City> {
     private final ObservableList<City> sortedCityList = FXCollections.observableArrayList();
     private CommandManager commandManager;
     private User user;
+    private HashMap<Shape, Integer> shapeMap = new HashMap<>();
+    private List<City> list = new ArrayList<>();
+    private boolean flag = true;
+    private HashMap<String, Color> colorHashMap = new HashMap<>();
+    private List<Integer> idList = new ArrayList<>();
+    private Canvas canvas = new Canvas(1280, 980);
+
+    @FXML
+    private AnchorPane secondMainScreen;
+
+    @FXML
+    private TabPane tabPane;
+
+    @FXML
+    private AnchorPane firstMainScreen;
+
+    @FXML
+    private TableView<City> objectTable;
+
 
     @FXML
     private TableView<City> contentTable;
@@ -84,6 +108,9 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     private TableColumn<City, String> humanNameColumn;
+
+    @FXML
+    private TableColumn<City, String> usernameColumn;
 
     @FXML
     private TableView<Rule> ruleTable;
@@ -178,6 +205,51 @@ public class MainScreenController extends StorageController<City> {
     @FXML
     private Button removeRuleButton;
 
+    @FXML
+    private TableColumn<City, Integer> idColumn1;
+
+    @FXML
+    private TableColumn<City, String> nameColumn1;
+
+    @FXML
+    private TableColumn<City, City.Coordinates> coordinatesColumn1;
+
+    @FXML
+    private TableColumn<City, Double> xColumn1;
+
+    @FXML
+    private TableColumn<City, Float> yColumn1;
+
+    @FXML
+    private TableColumn<City, String> creationDateColumn1;
+
+    @FXML
+    private TableColumn<City, Integer> areaColumn1;
+
+    @FXML
+    private TableColumn<City, Integer> populationColumn1;
+
+    @FXML
+    private TableColumn<City, Integer> metersAboveSeaLevelColumn1;
+
+    @FXML
+    private TableColumn<City, City.Climate> climateColumn1;
+
+    @FXML
+    private TableColumn<City, City.Government> governmentColumn1;
+
+    @FXML
+    private TableColumn<City, City.StandardOfLiving> standardOfLivingColumn1;
+
+    @FXML
+    private TableColumn<City, City.Human> governorColumn1;
+
+    @FXML
+    private TableColumn<City, String> humanNameColumn1;
+
+    @FXML
+    private TableColumn<City, String> usernameColumn1;
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -239,19 +311,103 @@ public class MainScreenController extends StorageController<City> {
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernor().getHumanName()));
         humanNameColumn.setSortable(false);
 
+        this.usernameColumn.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getUsername()));
+        usernameColumn.setSortable(false);
+
         this.columnColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(Client.resourceFactory.getResources()
-                        .getString(cellData.getValue().getColumn().getName())));
+                new ReadOnlyObjectWrapper<>(Client.resourceFactory.getResources().getString(cellData.getValue()
+                        .getColumn().getName())));
         columnColumn.setSortable(false);
 
         this.orderColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(Client.resourceFactory.getResources()
-                        .getString(cellData.getValue().getOrder().getName())));
+                new ReadOnlyObjectWrapper<>(Client.resourceFactory.getResources().getString(cellData.getValue()
+                        .getOrder().getName())));
         this.orderColumn.setSortable(false);
 
         this.parameterColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getParameter()));
         this.parameterColumn.setSortable(false);
+        this.idColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+        idColumn1.setSortable(false);
+
+        this.nameColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getName()));
+        nameColumn1.setSortable(false);
+
+        this.xColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getFirstCoordinates()));
+        xColumn1.setSortable(false);
+
+        this.yColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getSecondCoordinates()));
+        yColumn1.setSortable(false);
+
+        this.creationDateColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().toString()
+                        .replace("T", " ")));
+        creationDateColumn1.setSortable(false);
+
+        this.areaColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getArea()));
+        areaColumn1.setSortable(false);
+
+        this.populationColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getPopulation()));
+        populationColumn1.setSortable(false);
+
+        this.metersAboveSeaLevelColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getMeters()));
+        metersAboveSeaLevelColumn1.setSortable(false);
+
+        this.climateColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getClimate()));
+        climateColumn1.setSortable(false);
+
+        this.governmentColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernment()));
+        governmentColumn1.setSortable(false);
+
+        this.standardOfLivingColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getStandardOfLiving()));
+        standardOfLivingColumn1.setSortable(false);
+
+        this.humanNameColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernor().getHumanName()));
+        humanNameColumn1.setSortable(false);
+
+        this.usernameColumn1.setCellValueFactory(cellData ->
+                new ReadOnlyObjectWrapper<>(cellData.getValue().getUsername()));
+        usernameColumn1.setSortable(false);
+
+        contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            int id = contentTable.getSelectionModel().getSelectedIndex();
+            if (id != -1) {
+                this.nameInput.setText(this.getCollection().get(id).getName());
+                this.xInput.setText(this.getCollection().get(id).getCoordinates().getFirstCoordinates().toString());
+                this.yInput.setText(this.getCollection().get(id).getCoordinates().getSecondCoordinates().toString());
+                this.areaInput.setText(this.getCollection().get(id).getArea().toString());
+                this.populationInput.setText(this.getCollection().get(id).getPopulation().toString());
+                this.metersInput.setText(Integer.toString(this.getCollection().get(id).getMeters()));
+                try {
+                    this.climateInput.setText(this.getCollection().get(id).getClimate().getName());
+                } catch (NullPointerException e) {
+                    this.climateInput.setText("");
+                }
+                try {
+                    this.governmentInput.setText(this.getCollection().get(id).getGovernment().getName());
+                } catch (NullPointerException e) {
+                    this.governmentInput.setText("");
+                }
+                try {
+                    this.standardOfLivingInput.setText(this.getCollection().get(id).getStandardOfLiving().getName());
+                } catch (NullPointerException e) {
+                    this.standardOfLivingInput.setText("");
+                }
+                this.humanNameInput.setText(this.getCollection().get(id).getGovernor().getHumanName());
+            }
+        });
 
         contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             int id = contentTable.getSelectionModel().getSelectedIndex();
@@ -331,8 +487,9 @@ public class MainScreenController extends StorageController<City> {
     public void updateContents(Collection<City> collection) {
         this.usernameTextBlock.setText(user.getName());
         this.getCollection().setAll(collection);
-
         this.fillCityTable();
+
+        Platform.runLater(this::fillMap);
     }
 
     private void fillCityTable() {
@@ -556,5 +713,86 @@ public class MainScreenController extends StorageController<City> {
         } catch (ArrayIndexOutOfBoundsException ignored) {
 
         }
+    }
+
+    public void fillMap() {
+        boolean contains = false;
+        Set keys = shapeMap.keySet();
+        for (Object key : keys) {
+            secondMainScreen.getChildren().remove(key);
+        }
+        shapeMap.clear();
+        if (flag) {
+            for (City city : sortedCityList) {
+                if (colorHashMap.get(city.getUsername()) == null) {
+                    Color c = Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255),
+                            (int) (Math.random() * 255));
+                    while (colorHashMap.containsValue(c)) {
+                        c = Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255),
+                                (int) (Math.random() * 255));
+                    }
+                    colorHashMap.put(city.getUsername(), c);
+                }
+            }
+        }
+        list = sortedCityList.stream().sorted(Comparator.comparingInt(City::getArea).reversed())
+                .collect(Collectors.toList());
+        for (City city : list) {
+            Shape circle = new Circle((city.getArea() / 50) * canvas.getScaleX(), colorHashMap.get(city.getUsername()));
+            circle.setLayoutX(canvas.getWidth() / 2 + (city.getCoordinates().getFirstCoordinates()) * canvas.getScaleX());
+            circle.setLayoutY(canvas.getHeight() / 2 + (city.getCoordinates().getSecondCoordinates()) * canvas.getScaleX());
+            shapeMap.put(circle, city.getId());
+            if (!idList.contains(city.getId())) {
+                idList.add(city.getId());
+                contains = true;
+            }
+            circle.setStroke(Color.BLACK);
+            secondMainScreen.setOnScroll(this::mouseScroll);
+            circle.setOnMouseClicked(this::mouseClicked);
+            circle.setOnMouseEntered(this::mouseEntered);
+            if (circle.getLayoutY() - city.getArea() / 50 * canvas.getScaleX() - 82 > 0) {
+                secondMainScreen.getChildren().add(circle);
+            }
+            if (flag && contains) {
+                contains = false;
+                ScaleTransition circleAnimation = new ScaleTransition(Duration.millis(5000), circle);
+                circleAnimation.setFromX(0);
+                circleAnimation.setToX(1);
+                circleAnimation.setFromY(0);
+                circleAnimation.setToY(1);
+                circleAnimation.play();
+            }
+        }
+    }
+
+    private void mouseClicked(MouseEvent event) {
+        int count = 0;
+        Shape shape = (Shape) event.getSource();
+        int id = shapeMap.get(shape);
+        for (City city : sortedCityList) {
+            count++;
+            if (city.getId() == id) {
+                tabPane.getSelectionModel().select(0);
+                contentTable.getSelectionModel().select(count - 1, idColumn);
+            }
+        }
+    }
+
+    private void mouseEntered(MouseEvent event) {
+        Shape shape = (Shape) event.getSource();
+        int id = shapeMap.get(shape);
+        for (City city : sortedCityList) {
+            if (city.getId() == id) objectTable.getItems().setAll(city);
+        }
+    }
+
+    private void mouseScroll(ScrollEvent event) {
+        double k = (event.getDeltaY() < 0 ? 0.9 : 1.1);
+        double zr = canvas.getScaleX() * k;
+        canvas.setScaleX(zr);
+        canvas.setScaleY(zr);
+        flag = false;
+        fillMap();
+        flag = true;
     }
 }
