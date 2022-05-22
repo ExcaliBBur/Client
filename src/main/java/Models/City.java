@@ -19,6 +19,7 @@ public class City extends Collectables implements Serializable {
     private Government government;
     private StandardOfLiving standardOfLiving;
     private Human governor;
+    private String username;
 
     public static final long serialVersionUID = 42L;
 
@@ -37,7 +38,7 @@ public class City extends Collectables implements Serializable {
      */
     public City(int id, String name, Coordinates coordinates, java.time.LocalDateTime creationDate, Integer area,
                 Integer population, int meters, Climate climate, Government government,
-                StandardOfLiving standardOfLiving, Human governor) {
+                StandardOfLiving standardOfLiving, Human governor, String username) {
         super(id, name);
         this.coordinates = coordinates;
         this.creationDate = creationDate;
@@ -48,6 +49,7 @@ public class City extends Collectables implements Serializable {
         this.government = government;
         this.standardOfLiving = standardOfLiving;
         this.governor = governor;
+        this.username = username;
     }
 
     public City() {
@@ -68,7 +70,9 @@ public class City extends Collectables implements Serializable {
             throw new InputException.EmptyLineException();
         }
     }
-
+    public String getUsername() {
+        return username;
+    }
     /**
      * Setter of coordinates.
      *
