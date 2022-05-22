@@ -13,22 +13,23 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.Label?>
-<TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="Controllers.MainScreenController">
+<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171"
+         xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainScreenController">
     <tabs>
 
         <Tab text="Main">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="983.0" prefWidth="1254.0">
+                <AnchorPane fx:id="firstMainScreen" minHeight="0.0" minWidth="0.0" prefHeight="983.0" prefWidth="1343.0"
+                            style="-fx-background-color: #483D8B;">
                     <children>
-                        <Button fx:id="logoutButton" layoutX="1133.0" layoutY="30.0" mnemonicParsing="false"
+                        <Button fx:id="logoutButton" layoutX="1206.0" layoutY="33.0" mnemonicParsing="false"
                                 onAction="#logout" prefHeight="34.0" prefWidth="88.0" text="Logout">
                             <font>
                                 <Font size="18.0"/>
                             </font>
                         </Button>
                         <TableView fx:id="contentTable" layoutX="252.0" layoutY="100.0" prefHeight="590.0"
-                                   prefWidth="987.0">
+                                   prefWidth="1060.0">
                             <placeholder>
                                 <Label/>
                             </placeholder>
@@ -65,6 +66,8 @@
                                                      style="-fx-alignment: CENTER;" text="HumanName"/>
                                     </columns>
                                 </TableColumn>
+                                <TableColumn fx:id="usernameColumn" prefWidth="75.0" style="-fx-alignment: CENTER;"
+                                             text="Username"/>
                             </columns>
                         </TableView>
                         <TextField fx:id="nameInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="152.0"
@@ -145,29 +148,30 @@
                                 <Font size="14.0"/>
                             </font>
                         </Button>
-                        <RadioButton fx:id="addRadioButton" layoutX="91.0" layoutY="595.0" mnemonicParsing="false"
-                                     text="ADD">
+                        <RadioButton fx:id="addRadioButton" layoutX="63.0" layoutY="596.0" mnemonicParsing="false"
+                                     text="ADD" textFill="WHITE">
                             <toggleGroup>
                                 <ToggleGroup fx:id="commandGroup"/>
                             </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="editRadioButton" layoutX="91.0" layoutY="621.0" mnemonicParsing="false"
-                                     text="EDIT" toggleGroup="$commandGroup"/>
-                        <RadioButton fx:id="addIfMinRadioButton" layoutX="91.0" layoutY="647.0" mnemonicParsing="false"
-                                     text="ADD IF MIN" toggleGroup="$commandGroup"/>
-                        <RadioButton fx:id="removeGreaterRadioButton" layoutX="91.0" layoutY="673.0"
-                                     mnemonicParsing="false" text="REMOVE GREATER" toggleGroup="$commandGroup"/>
-                        <RadioButton fx:id="removeLowerRadioButton" layoutX="91.0" layoutY="700.0"
-                                     mnemonicParsing="false" text="REMOVE LOWER" toggleGroup="$commandGroup"/>
-                        <Button fx:id="removeButton" layoutX="567.0" layoutY="37.0" mnemonicParsing="false"
+                        <RadioButton fx:id="editRadioButton" layoutX="63.0" layoutY="622.0" mnemonicParsing="false"
+                                     text="EDIT" textFill="WHITE" toggleGroup="$commandGroup"/>
+                        <RadioButton fx:id="addIfMinRadioButton" layoutX="63.0" layoutY="648.0" mnemonicParsing="false"
+                                     text="ADD IF MIN" textFill="WHITE" toggleGroup="$commandGroup"/>
+                        <RadioButton fx:id="removeGreaterRadioButton" layoutX="63.0" layoutY="674.0"
+                                     mnemonicParsing="false" text="REMOVE GREATER" textFill="WHITE"
+                                     toggleGroup="$commandGroup"/>
+                        <RadioButton fx:id="removeLowerRadioButton" layoutX="63.0" layoutY="701.0"
+                                     mnemonicParsing="false" text="REMOVE LOWER" textFill="WHITE"
+                                     toggleGroup="$commandGroup"/>
+                        <Button fx:id="removeButton" layoutX="614.0" layoutY="38.0" mnemonicParsing="false"
                                 onAction="#remove" text="Remove">
                             <font>
                                 <Font size="14.0"/>
                             </font>
                         </Button>
-                        <Text fx:id="userText" layoutX="96.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                              text="Username"
-                              textAlignment="CENTER" wrappingWidth="89.783203125">
+                        <Text fx:id="userText" layoutX="57.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Username" textAlignment="CENTER" wrappingWidth="180.783203125">
                             <font>
                                 <Font size="18.0"/>
                             </font>
@@ -215,9 +219,54 @@
                 </AnchorPane>
             </content>
         </Tab>
-        <Tab text="Second main">
+        <Tab text="Map">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                <AnchorPane fx:id="secondMainScreen" layoutY="82.0" minHeight="0.0" minWidth="0.0" prefHeight="983.0"
+                            prefWidth="1343.0">
+                    <children>
+                        <TableView fx:id="objectTable" layoutX="134.0" prefHeight="85.0" prefWidth="1084.0">
+                            <placeholder>
+                                <Label/>
+                            </placeholder>
+                            <columns>
+                                <TableColumn fx:id="idColumn1" prefWidth="35.0" style="-fx-alignment: CENTER;"
+                                             text="ID"/>
+                                <TableColumn fx:id="nameColumn1" prefWidth="67.0" style="-fx-alignment: CENTER;"
+                                             text="Name"/>
+                                <TableColumn fx:id="coordinatesColumn1" prefWidth="191.0" text="Coordinates">
+                                    <columns>
+                                        <TableColumn prefWidth="62.0" style="-fx-alignment: CENTER;" text="X"
+                                                     fx:id="xColumn1"/>
+                                        <TableColumn fx:id="yColumn1" minWidth="0.0" prefWidth="57.0"
+                                                     style="-fx-alignment: CENTER;" text="Y"/>
+                                    </columns>
+                                </TableColumn>
+                                <TableColumn fx:id="creationDateColumn1" prefWidth="94.0" style="-fx-alignment: CENTER;"
+                                             text="CreationDate"/>
+                                <TableColumn fx:id="areaColumn1" prefWidth="46.0" style="-fx-alignment: CENTER;"
+                                             text="Area"/>
+                                <TableColumn fx:id="populationColumn1" prefWidth="72.0" style="-fx-alignment: CENTER;"
+                                             text="Population"/>
+                                <TableColumn fx:id="metersAboveSeaLevelColumn1" prefWidth="139.0"
+                                             style="-fx-alignment: CENTER;" text="MetersAboveSeaLevel"/>
+                                <TableColumn fx:id="climateColumn1" prefWidth="73.0" style="-fx-alignment: CENTER;"
+                                             text="Climate"/>
+                                <TableColumn fx:id="governmentColumn1" prefWidth="99.0" style="-fx-alignment: CENTER;"
+                                             text="Government"/>
+                                <TableColumn fx:id="standardOfLivingColumn1" prefWidth="123.0"
+                                             style="-fx-alignment: CENTER;" text="StandardOfLiving"/>
+                                <TableColumn fx:id="governorColumn1" prefWidth="100.0" text="Governor">
+                                    <columns>
+                                        <TableColumn fx:id="humanNameColumn1" prefWidth="118.0"
+                                                     style="-fx-alignment: CENTER;" text="HumanName"/>
+                                    </columns>
+                                </TableColumn>
+                                <TableColumn fx:id="usernameColumn1" prefWidth="98.0" style="-fx-alignment: CENTER;"
+                                             text="Username"/>
+                            </columns>
+                        </TableView>
+                    </children>
+                </AnchorPane>
             </content>
         </Tab>
     </tabs>
