@@ -12,6 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.Label?>
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="Controllers.MainScreenController">
     <tabs>
@@ -28,6 +29,9 @@
                         </Button>
                         <TableView fx:id="contentTable" layoutX="252.0" layoutY="100.0" prefHeight="590.0"
                                    prefWidth="987.0">
+                            <placeholder>
+                                <Label/>
+                            </placeholder>
                             <columns>
                                 <TableColumn fx:id="idColumn" prefWidth="35.0" style="-fx-alignment: CENTER;"
                                              text="ID"/>
@@ -176,6 +180,9 @@
                         </TextField>
                         <TableView fx:id="ruleTable" layoutX="608.0" layoutY="709.0" prefHeight="200.0"
                                    prefWidth="276.0">
+                            <placeholder>
+                                <Label/>
+                            </placeholder>
                             <columns>
                                 <TableColumn fx:id="ruleHeader" prefWidth="275.0" text="Sorting and Filtration">
                                     <columns>

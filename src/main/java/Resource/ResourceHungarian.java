@@ -44,7 +44,8 @@ public class ResourceHungarian extends ListResourceBundle {
             {"cancel", "Mégse"},
             {"none", "Nincs"},
             {"sort_increase", "Rendezés növekedése"},
-            {"sort_decrease", "Rendezés csökkentése"}
+            {"sort_decrease", "Rendezés csökkentése"},
+            {"files_path", "Fájlok elérési útja"}
     };
 
     public Object[][] getContents() {

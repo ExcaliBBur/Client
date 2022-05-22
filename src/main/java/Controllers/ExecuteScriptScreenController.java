@@ -2,6 +2,7 @@ package Controllers;
 
 import Exceptions.InputException;
 import Interaction.Parser;
+import Main.Client;
 import Models.City;
 import Models.Controller;
 import Models.User;
@@ -37,6 +38,13 @@ public class ExecuteScriptScreenController extends Controller {
 
     public void setCommandManager(CommandManager commandManager) {
         this.commandManager = commandManager;
+    }
+
+    @FXML
+    private void initialize() {
+        this.filesPath.promptTextProperty().bind(Client.resourceFactory.getStringBinding("files_path"));
+        this.okButton.textProperty().bind(Client.resourceFactory.getStringBinding("ok"));
+        this.cancelButton.textProperty().bind(Client.resourceFactory.getStringBinding("cancel"));
     }
 
     @FXML
