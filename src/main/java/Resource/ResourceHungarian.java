@@ -46,6 +46,14 @@ public class ResourceHungarian extends ListResourceBundle {
             {"sort_increase", "Rendezés növekedése"},
             {"sort_decrease", "Rendezés csökkentése"},
             {"files_path", "Fájlok elérési útja"},
+            {"empty_line", "Üres karakterlánc lett beírva."},
+            {"false_requirements", "A megadott karakterlánc nem felel meg a követelményeknek."},
+            {"not_an_option", "Egy nem létező típus került bevezetésre."},
+            {"false_arguments", "Valami nincs rendben a beírt érvekkel."},
+            {"not_a_command", "A megadott parancs nem létezik."},
+            {"server_unavailable", "A szerver nem érhető el."},
+            {"empty_account", "Nem küldhet parancsokat, jelentkezzen be vagy regisztráljon."},
+            {"error", "Hiba"}
     };
 
     public Object[][] getContents() {

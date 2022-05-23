@@ -2,6 +2,7 @@ package Models;
 
 import Exceptions.InputException;
 import Interaction.Sender;
+import Main.Client;
 import Realisation.StorageListener;
 import javafx.scene.control.Alert;
 
@@ -41,6 +42,8 @@ public abstract class Controller {
         Alert alert = new Alert(type);
 
         alert.setContentText(message);
+        alert.setHeaderText(Client.resourceFactory.getResources().getString(type.name().toLowerCase()));
+        alert.setTitle(Client.resourceFactory.getResources().getString(type.name().toLowerCase()));
         alert.showAndWait();
     }
 

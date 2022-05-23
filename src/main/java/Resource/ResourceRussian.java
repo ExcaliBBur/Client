@@ -46,6 +46,14 @@ public class ResourceRussian extends ListResourceBundle {
             {"sort_increase", "Сортировка по возрастанию"},
             {"sort_decrease", "Сортировка по убыванию"},
             {"files_path", "Расположение файла"},
+            {"empty_line", "Введена пустая строка."},
+            {"false_requirements", "Введенная строка не соответствует требованиям."},
+            {"not_an_option", "Введён несуществующий тип."},
+            {"false_arguments", "Что-то не так с введенными аргументами."},
+            {"not_a_command", "Введённой команды не существует."},
+            {"server_unavailable", "Сервер недоступен."},
+            {"empty_account", "Вы не можете отправлять команды, войдите или зарегистрируйтесь."},
+            {"error", "Ошибка"}
     };
 
     public Object[][] getContents() {

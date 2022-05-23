@@ -1,5 +1,7 @@
 package Exceptions;
 
+import Main.Client;
+
 /**
  * Represents user input errors.
  */
@@ -24,16 +26,12 @@ public abstract class InputException extends Exception {
      */
     public static class EmptyLineException extends InputException {
         public EmptyLineException() {
-            super.message = "You entered an empty line, try again.";
+            super.message = Client.resourceFactory.getResources().getString("empty_line");
         }
-    }
 
-    /**
-     * Not a number.
-     */
-    public static class NotANumberException extends InputException {
-        public NotANumberException() {
-            super.message = "You didn't enter a number.";
+        public EmptyLineException(String message) {
+            super.message = Client.resourceFactory.getResources().getString(message) + ": " + Client.resourceFactory
+                    .getResources().getString("empty_line");
         }
     }
 
@@ -42,7 +40,12 @@ public abstract class InputException extends Exception {
      */
     public static class IncorrectRequirementsException extends InputException {
         public IncorrectRequirementsException() {
-            super.message = "The entered line does not meet the requirements, try again.";
+            super.message = Client.resourceFactory.getResources().getString("false_requirements");
+        }
+
+        public IncorrectRequirementsException(String message) {
+            super.message = Client.resourceFactory.getResources().getString(message) + ": " + Client.resourceFactory
+                    .getResources().getString("false_requirements");
         }
     }
 
@@ -51,7 +54,12 @@ public abstract class InputException extends Exception {
      */
     public static class IncorrectOptionException extends InputException {
         public IncorrectOptionException() {
-            super.message = "You didn't enter an option.";
+            super.message = Client.resourceFactory.getResources().getString("not_an_option");
+        }
+
+        public IncorrectOptionException(String message) {
+            super.message = Client.resourceFactory.getResources().getString(message) + ": " + Client.resourceFactory
+                    .getResources().getString("not_an_option");
         }
     }
 
@@ -60,7 +68,7 @@ public abstract class InputException extends Exception {
      */
     public static class ArgumentsException extends InputException {
         public ArgumentsException() {
-            super.message = "Something is wrong with command arguments.";
+            super.message = Client.resourceFactory.getResources().getString("false_arguments");
         }
     }
 
@@ -69,7 +77,7 @@ public abstract class InputException extends Exception {
      */
     public static class ThereIsNoSuchCommandException extends InputException {
         public ThereIsNoSuchCommandException() {
-            super.message = "There is no such command.";
+            super.message = Client.resourceFactory.getResources().getString("not_a_command");
         }
     }
 
@@ -78,13 +86,13 @@ public abstract class InputException extends Exception {
      */
     public static class ServerUnavailableException extends InputException {
         public ServerUnavailableException() {
-            super.message = "The server is unavailable.";
+            super.message = Client.resourceFactory.getResources().getString("server_unavailable");
         }
     }
 
     public static class NotAuthorizedException extends InputException {
         public NotAuthorizedException() {
-            super.message = "You can't send commands to the server, log in or register.";
+            super.message = Client.resourceFactory.getResources().getString("empty_account");
         }
     }
 }

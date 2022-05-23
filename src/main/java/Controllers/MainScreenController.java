@@ -36,6 +36,10 @@ import javafx.application.Platform;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,7 +71,7 @@ public class MainScreenController extends StorageController<City> {
     private TableView<City> contentTable;
 
     @FXML
-    private TableColumn<City, Integer> idColumn;
+    private TableColumn<City, String> idColumn;
 
     @FXML
     private TableColumn<City, String> nameColumn;
@@ -76,22 +80,22 @@ public class MainScreenController extends StorageController<City> {
     private TableColumn<City, City.Coordinates> coordinatesColumn;
 
     @FXML
-    private TableColumn<City, Double> xColumn;
+    private TableColumn<City, String> xColumn;
 
     @FXML
-    private TableColumn<City, Float> yColumn;
+    private TableColumn<City, String> yColumn;
 
     @FXML
     private TableColumn<City, String> creationDateColumn;
 
     @FXML
-    private TableColumn<City, Integer> areaColumn;
+    private TableColumn<City, String> areaColumn;
 
     @FXML
-    private TableColumn<City, Integer> populationColumn;
+    private TableColumn<City, String> populationColumn;
 
     @FXML
-    private TableColumn<City, Integer> metersAboveSeaLevelColumn;
+    private TableColumn<City, String> metersAboveSeaLevelColumn;
 
     @FXML
     private TableColumn<City, City.Climate> climateColumn;
@@ -205,7 +209,7 @@ public class MainScreenController extends StorageController<City> {
     private Button removeRuleButton;
 
     @FXML
-    private TableColumn<City, Integer> idColumnSecond;
+    private TableColumn<City, String> idColumnSecond;
 
     @FXML
     private TableColumn<City, String> nameColumnSecond;
@@ -214,22 +218,22 @@ public class MainScreenController extends StorageController<City> {
     private TableColumn<City, City.Coordinates> coordinatesColumnSecond;
 
     @FXML
-    private TableColumn<City, Double> xColumnSecond;
+    private TableColumn<City, String> xColumnSecond;
 
     @FXML
-    private TableColumn<City, Float> yColumnSecond;
+    private TableColumn<City, String> yColumnSecond;
 
     @FXML
     private TableColumn<City, String> creationDateColumnSecond;
 
     @FXML
-    private TableColumn<City, Integer> areaColumnSecond;
+    private TableColumn<City, String> areaColumnSecond;
 
     @FXML
-    private TableColumn<City, Integer> populationColumnSecond;
+    private TableColumn<City, String> populationColumnSecond;
 
     @FXML
-    private TableColumn<City, Integer> metersAboveSeaLevelColumnSecond;
+    private TableColumn<City, String> metersAboveSeaLevelColumnSecond;
 
     @FXML
     private TableColumn<City, City.Climate> climateColumnSecond;
@@ -263,7 +267,8 @@ public class MainScreenController extends StorageController<City> {
         firstMainScreen.heightProperty().addListener((observableValue, number, t1) -> autoScaling());
         secondMainScreen.widthProperty().addListener((observableValue, number, t1) -> autoScalingSecond());
         this.idColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getId())));
         idColumn.setSortable(false);
 
         this.nameColumn.setCellValueFactory(cellData ->
@@ -271,28 +276,34 @@ public class MainScreenController extends StorageController<City> {
         nameColumn.setSortable(false);
 
         this.xColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getFirstCoordinates()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getCoordinates().getFirstCoordinates())));
         xColumn.setSortable(false);
 
         this.yColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getSecondCoordinates()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getCoordinates().getSecondCoordinates())));
         yColumn.setSortable(false);
 
         this.creationDateColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().toString()
-                        .replace("T", " ")));
+                new ReadOnlyObjectWrapper<>(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                        .withLocale(Client.resourceFactory.getLanguage().getLocale()).format(cellData.getValue()
+                                .getCreationDate().atZone(ZoneId.systemDefault()))));
         creationDateColumn.setSortable(false);
 
         this.areaColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getArea()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getArea())));
         areaColumn.setSortable(false);
 
         this.populationColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getPopulation()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getPopulation())));
         populationColumn.setSortable(false);
 
         this.metersAboveSeaLevelColumn.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getMeters()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getMeters())));
         metersAboveSeaLevelColumn.setSortable(false);
 
         this.climateColumn.setCellValueFactory(cellData ->
@@ -329,7 +340,8 @@ public class MainScreenController extends StorageController<City> {
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getParameter()));
         this.parameterColumn.setSortable(false);
         this.idColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage()
+                        .getLocale()).format(cellData.getValue().getId())));
         idColumnSecond.setSortable(false);
 
         this.nameColumnSecond.setCellValueFactory(cellData ->
@@ -337,28 +349,34 @@ public class MainScreenController extends StorageController<City> {
         nameColumnSecond.setSortable(false);
 
         this.xColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getFirstCoordinates()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getCoordinates().getFirstCoordinates())));
         xColumnSecond.setSortable(false);
 
         this.yColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getSecondCoordinates()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getCoordinates().getSecondCoordinates())));
         yColumnSecond.setSortable(false);
 
         this.creationDateColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().toString()
-                        .replace("T", " ")));
+                new ReadOnlyObjectWrapper<>(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+                        .withLocale(Client.resourceFactory.getLanguage().getLocale()).format(cellData.getValue()
+                                .getCreationDate().atZone(ZoneId.systemDefault()))));
         creationDateColumnSecond.setSortable(false);
 
         this.areaColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getArea()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getArea())));
         areaColumnSecond.setSortable(false);
 
         this.populationColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getPopulation()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getPopulation())));
         populationColumnSecond.setSortable(false);
 
         this.metersAboveSeaLevelColumnSecond.setCellValueFactory(cellData ->
-                new ReadOnlyObjectWrapper<>(cellData.getValue().getMeters()));
+                new ReadOnlyObjectWrapper<>(NumberFormat.getInstance(Client.resourceFactory.getLanguage().getLocale())
+                        .format(cellData.getValue().getMeters())));
         metersAboveSeaLevelColumnSecond.setSortable(false);
 
         this.climateColumnSecond.setCellValueFactory(cellData ->
@@ -380,34 +398,6 @@ public class MainScreenController extends StorageController<City> {
         this.usernameColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getUsername()));
         usernameColumnSecond.setSortable(false);
-
-        contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            int id = contentTable.getSelectionModel().getSelectedIndex();
-            if (id != -1) {
-                this.nameInput.setText(this.getCollection().get(id).getName());
-                this.xInput.setText(this.getCollection().get(id).getCoordinates().getFirstCoordinates().toString());
-                this.yInput.setText(this.getCollection().get(id).getCoordinates().getSecondCoordinates().toString());
-                this.areaInput.setText(this.getCollection().get(id).getArea().toString());
-                this.populationInput.setText(this.getCollection().get(id).getPopulation().toString());
-                this.metersInput.setText(Integer.toString(this.getCollection().get(id).getMeters()));
-                try {
-                    this.climateInput.setText(this.getCollection().get(id).getClimate().getName());
-                } catch (NullPointerException e) {
-                    this.climateInput.setText("");
-                }
-                try {
-                    this.governmentInput.setText(this.getCollection().get(id).getGovernment().getName());
-                } catch (NullPointerException e) {
-                    this.governmentInput.setText("");
-                }
-                try {
-                    this.standardOfLivingInput.setText(this.getCollection().get(id).getStandardOfLiving().getName());
-                } catch (NullPointerException e) {
-                    this.standardOfLivingInput.setText("");
-                }
-                this.humanNameInput.setText(this.getCollection().get(id).getGovernor().getHumanName());
-            }
-        });
 
         contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             int id = contentTable.getSelectionModel().getSelectedIndex();
@@ -472,6 +462,7 @@ public class MainScreenController extends StorageController<City> {
         this.standardOfLivingColumn.textProperty().bind(Client.resourceFactory.getStringBinding("standard"));
         this.governorColumn.textProperty().bind(Client.resourceFactory.getStringBinding("governor"));
         this.humanNameColumn.textProperty().bind(Client.resourceFactory.getStringBinding("human"));
+        this.nameColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("name"));
         this.logoutButton.textProperty().bind(Client.resourceFactory.getStringBinding("logout"));
         this.executeScriptButton.textProperty().bind(Client.resourceFactory
                 .getStringBinding("execute_script"));
@@ -485,6 +476,20 @@ public class MainScreenController extends StorageController<City> {
         this.editButton.textProperty().bind(Client.resourceFactory.getStringBinding("edit"));
         this.removeRuleButton.textProperty().bind(Client.resourceFactory.getStringBinding("remove_rule"));
         this.usernameColumn.textProperty().bind(Client.resourceFactory.getStringBinding("username"));
+        this.idColumn.textProperty().bind(Client.resourceFactory.getStringBinding("id"));
+        this.coordinatesColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("coordinates"));
+        this.xColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("x"));
+        this.yColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("y"));
+        this.creationDateColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("creation_date"));
+        this.areaColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("area"));
+        this.populationColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("population"));
+        this.metersAboveSeaLevelColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("meters"));
+        this.climateColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("climate"));
+        this.governmentColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("government"));
+        this.standardOfLivingColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("standard"));
+        this.governorColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("governor"));
+        this.humanNameColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("human"));
+        this.usernameColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("username"));
     }
 
     public void updateContents(Collection<City> collection) {

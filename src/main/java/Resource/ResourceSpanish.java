@@ -46,6 +46,14 @@ public class ResourceSpanish extends ListResourceBundle {
             {"sort_increase", "Aumento de clasificación"},
             {"sort_decrease", "Ordenar disminución"},
             {"files_path", "Ruta de archivos"},
+            {"empty_line", "Se ha introducido una línea vacía."},
+            {"false_requirements", "La cadena introducida no cumple con los requisitos."},
+            {"not_an_option", "Introdujo un tipo."},
+            {"false_arguments", "Algo está mal con los argumentos introducidos."},
+            {"not_a_command", "El comando introducido no existe."},
+            {"server_unavailable", "El servidor no está disponible."},
+            {"empty_account", "No puede enviar comandos, iniciar sesión o registrarse."},
+            {"error", "Error"}
     };
 
     public Object[][] getContents() {

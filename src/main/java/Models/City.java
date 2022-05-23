@@ -67,12 +67,14 @@ public class City extends Collectables implements Serializable {
         if (!line.equals("")) {
             this.setName(line);
         } else {
-            throw new InputException.EmptyLineException();
+            throw new InputException.EmptyLineException("name");
         }
     }
+
     public String getUsername() {
         return username;
     }
+
     /**
      * Setter of coordinates.
      *
@@ -115,13 +117,13 @@ public class City extends Collectables implements Serializable {
                 if (tmp > 0) {
                     this.area = tmp;
                 } else {
-                    throw new InputException.IncorrectRequirementsException();
+                    throw new InputException.IncorrectRequirementsException("area");
                 }
             } catch (NumberFormatException e) {
-                throw new InputException.IncorrectRequirementsException();
+                throw new InputException.IncorrectRequirementsException("area");
             }
         } else {
-            throw new InputException.EmptyLineException();
+            throw new InputException.EmptyLineException("area");
         }
     }
 
@@ -158,13 +160,13 @@ public class City extends Collectables implements Serializable {
                 if (tmp > 0) {
                     this.population = tmp;
                 } else {
-                    throw new InputException.IncorrectRequirementsException();
+                    throw new InputException.IncorrectRequirementsException("population");
                 }
             } catch (NumberFormatException e) {
-                throw new InputException.IncorrectRequirementsException();
+                throw new InputException.IncorrectRequirementsException("population");
             }
         } else {
-            throw new InputException.EmptyLineException();
+            throw new InputException.EmptyLineException("population");
         }
     }
 
@@ -199,10 +201,10 @@ public class City extends Collectables implements Serializable {
             try {
                 this.meters = Integer.parseInt(line);
             } catch (NumberFormatException e) {
-                throw new InputException.IncorrectRequirementsException();
+                throw new InputException.IncorrectRequirementsException("meters");
             }
         } else {
-            throw new InputException.EmptyLineException();
+            throw new InputException.EmptyLineException("meters");
         }
     }
 
@@ -253,7 +255,7 @@ public class City extends Collectables implements Serializable {
                         return;
                     }
                 }
-                throw new InputException.IncorrectOptionException();
+                throw new InputException.IncorrectOptionException("climate");
             }
         } else {
             this.climate = null;
@@ -307,7 +309,7 @@ public class City extends Collectables implements Serializable {
                         return;
                     }
                 }
-                throw new InputException.IncorrectOptionException();
+                throw new InputException.IncorrectOptionException("government");
             }
         } else {
             this.government = null;
@@ -365,7 +367,7 @@ public class City extends Collectables implements Serializable {
                         return;
                     }
                 }
-                throw new InputException.IncorrectOptionException();
+                throw new InputException.IncorrectOptionException("standard");
             }
         } else {
             this.standardOfLiving = null;
@@ -511,13 +513,13 @@ public class City extends Collectables implements Serializable {
                     if (tmp <= 627) {
                         this.firstCoordinates = tmp;
                     } else {
-                        throw new InputException.IncorrectRequirementsException();
+                        throw new InputException.IncorrectRequirementsException("coordinate_x");
                     }
                 } catch (NumberFormatException e) {
-                    throw new InputException.IncorrectRequirementsException();
+                    throw new InputException.IncorrectRequirementsException("coordinate_x");
                 }
             } else {
-                throw new InputException.EmptyLineException();
+                throw new InputException.EmptyLineException("coordinate_x");
             }
         }
 
@@ -542,10 +544,10 @@ public class City extends Collectables implements Serializable {
                 try {
                     this.secondCoordinates = Float.parseFloat(line);
                 } catch (NumberFormatException e) {
-                    throw new InputException.IncorrectRequirementsException();
+                    throw new InputException.IncorrectRequirementsException("coordinate_y");
                 }
             } else {
-                throw new InputException.EmptyLineException();
+                throw new InputException.EmptyLineException("coordinate_y");
             }
         }
     }
@@ -601,7 +603,7 @@ public class City extends Collectables implements Serializable {
             if (!line.equals("")) {
                 this.humanName = line;
             } else {
-                throw new InputException.EmptyLineException();
+                throw new InputException.EmptyLineException("human");
             }
         }
     }
