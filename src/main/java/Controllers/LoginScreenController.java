@@ -113,8 +113,9 @@ public class LoginScreenController extends Controller {
             listener.setController(controller);
 
             secondStage.show();
+            secondStage.setMinWidth(989);
+            secondStage.setMinHeight(853);
             secondStage.setOnCloseRequest(windowEvent -> System.exit(0));
-
         } catch (IOException e) {
             e.printStackTrace();
         }

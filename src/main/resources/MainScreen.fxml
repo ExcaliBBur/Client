@@ -13,162 +13,207 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<TabPane fx:id="tabPane" minHeight="787.0" minWidth="997.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="100.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainScreenController">
+<TabPane fx:id="tabPane" minHeight="787.0" minWidth="997.0" tabClosingPolicy="UNAVAILABLE" tabMinWidth="100.0"
+         xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="Controllers.MainScreenController">
     <tabs>
 
         <Tab text="Main">
             <content>
-                <AnchorPane fx:id="firstMainScreen" minHeight="787.0" minWidth="997.0" prefHeight="983.0" prefWidth="1343.0" style="-fx-background-color: #483D8B;">
+                <AnchorPane fx:id="firstMainScreen" minHeight="787.0" minWidth="997.0" prefHeight="983.0"
+                            prefWidth="1343.0" style="-fx-background-color: #483D8B;">
                     <children>
-                        <Button fx:id="logoutButton" layoutX="1206.0" layoutY="33.0" mnemonicParsing="false" onAction="#logout" prefHeight="34.0" prefWidth="88.0" text="Logout">
+                        <Button fx:id="logoutButton" layoutX="1206.0" layoutY="33.0" mnemonicParsing="false"
+                                onAction="#logout" prefHeight="34.0" prefWidth="88.0" text="Logout">
                             <font>
-                                <Font size="18.0" />
+                                <Font size="18.0"/>
                             </font>
                         </Button>
-                        <TableView fx:id="contentTable" layoutX="252.0" layoutY="100.0" prefHeight="590.0" prefWidth="1060.0">
+                        <TableView fx:id="contentTable" layoutX="252.0" layoutY="100.0" prefHeight="590.0"
+                                   prefWidth="1060.0">
                             <placeholder>
-                                <Label />
+                                <Label/>
                             </placeholder>
                             <columns>
-                                <TableColumn fx:id="idColumn" prefWidth="35.0" style="-fx-alignment: CENTER;" text="ID" />
-                                <TableColumn fx:id="nameColumn" prefWidth="67.0" style="-fx-alignment: CENTER;" text="Name" />
+                                <TableColumn fx:id="idColumn" prefWidth="35.0" style="-fx-alignment: CENTER;"
+                                             text="ID"/>
+                                <TableColumn fx:id="nameColumn" prefWidth="67.0" style="-fx-alignment: CENTER;"
+                                             text="Name"/>
                                 <TableColumn fx:id="coordinatesColumn" prefWidth="191.0" text="Coordinates">
                                     <columns>
-                                        <TableColumn prefWidth="62.0" style="-fx-alignment: CENTER;" text="X" fx:id="xColumn" />
-                                        <TableColumn fx:id="yColumn" minWidth="0.0" prefWidth="57.0" style="-fx-alignment: CENTER;" text="Y" />
+                                        <TableColumn prefWidth="62.0" style="-fx-alignment: CENTER;" text="X"
+                                                     fx:id="xColumn"/>
+                                        <TableColumn fx:id="yColumn" minWidth="0.0" prefWidth="57.0"
+                                                     style="-fx-alignment: CENTER;" text="Y"/>
                                     </columns>
                                 </TableColumn>
-                                <TableColumn fx:id="creationDateColumn" prefWidth="94.0" style="-fx-alignment: CENTER;" text="CreationDate" />
-                                <TableColumn fx:id="areaColumn" prefWidth="46.0" style="-fx-alignment: CENTER;" text="Area" />
-                                <TableColumn fx:id="populationColumn" prefWidth="72.0" style="-fx-alignment: CENTER;" text="Population" />
-                                <TableColumn fx:id="metersAboveSeaLevelColumn" prefWidth="139.0" style="-fx-alignment: CENTER;" text="MetersAboveSeaLevel" />
-                                <TableColumn fx:id="climateColumn" prefWidth="73.0" style="-fx-alignment: CENTER;" text="Climate" />
-                                <TableColumn fx:id="governmentColumn" prefWidth="99.0" style="-fx-alignment: CENTER;" text="Government" />
-                                <TableColumn fx:id="standardOfLivingColumn" prefWidth="123.0" style="-fx-alignment: CENTER;" text="StandardOfLiving" />
+                                <TableColumn fx:id="creationDateColumn" prefWidth="94.0" style="-fx-alignment: CENTER;"
+                                             text="CreationDate"/>
+                                <TableColumn fx:id="areaColumn" prefWidth="46.0" style="-fx-alignment: CENTER;"
+                                             text="Area"/>
+                                <TableColumn fx:id="populationColumn" prefWidth="72.0" style="-fx-alignment: CENTER;"
+                                             text="Population"/>
+                                <TableColumn fx:id="metersAboveSeaLevelColumn" prefWidth="139.0"
+                                             style="-fx-alignment: CENTER;" text="MetersAboveSeaLevel"/>
+                                <TableColumn fx:id="climateColumn" prefWidth="73.0" style="-fx-alignment: CENTER;"
+                                             text="Climate"/>
+                                <TableColumn fx:id="governmentColumn" prefWidth="99.0" style="-fx-alignment: CENTER;"
+                                             text="Government"/>
+                                <TableColumn fx:id="standardOfLivingColumn" prefWidth="123.0"
+                                             style="-fx-alignment: CENTER;" text="StandardOfLiving"/>
                                 <TableColumn fx:id="governorColumn" prefWidth="100.0" text="Governor">
                                     <columns>
-                                        <TableColumn fx:id="humanNameColumn" prefWidth="118.0" style="-fx-alignment: CENTER;" text="HumanName" />
+                                        <TableColumn fx:id="humanNameColumn" prefWidth="118.0"
+                                                     style="-fx-alignment: CENTER;" text="HumanName"/>
                                     </columns>
                                 </TableColumn>
-                                <TableColumn fx:id="usernameColumn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Username" />
+                                <TableColumn fx:id="usernameColumn" prefWidth="75.0" style="-fx-alignment: CENTER;"
+                                             text="Username"/>
                             </columns>
                         </TableView>
-                        <TextField fx:id="nameInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="152.0" prefHeight="10.0" prefWidth="175.0" promptText="Name">
+                        <TextField fx:id="nameInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="152.0"
+                                   prefHeight="10.0" prefWidth="175.0" promptText="Name">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField alignment="TOP_LEFT" layoutX="48.0" layoutY="193.0" promptText="Coordinate X" fx:id="xInput">
+                        <TextField alignment="TOP_LEFT" layoutX="48.0" layoutY="193.0" promptText="Coordinate X"
+                                   fx:id="xInput">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="yInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="234.0" promptText="Coordinate Y">
+                        <TextField fx:id="yInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="234.0"
+                                   promptText="Coordinate Y">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="areaInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="275.0" promptText="Area">
+                        <TextField fx:id="areaInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="275.0"
+                                   promptText="Area">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="populationInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="316.0" promptText="Population">
+                        <TextField fx:id="populationInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="316.0"
+                                   promptText="Population">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="metersInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="357.0" promptText="Meters above sea level">
+                        <TextField fx:id="metersInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="357.0"
+                                   promptText="Meters above sea level">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="climateInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="398.0" promptText="Climate">
+                        <TextField fx:id="climateInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="398.0"
+                                   promptText="Climate">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="governmentInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="439.0" promptText="Government">
+                        <TextField fx:id="governmentInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="439.0"
+                                   promptText="Government">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="standardOfLivingInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="480.0" promptText="Standard of living">
+                        <TextField fx:id="standardOfLivingInput" alignment="TOP_LEFT" layoutX="48.0" layoutY="480.0"
+                                   promptText="Standard of living">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <TextField fx:id="humanNameInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="521.0" promptText="Human name">
+                        <TextField fx:id="humanNameInput" alignment="TOP_LEFT" layoutX="49.0" layoutY="521.0"
+                                   promptText="Human name">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </TextField>
-                        <Button fx:id="okButton" layoutX="91.0" layoutY="565.0" mnemonicParsing="false" onAction="#doSomething" prefHeight="50.0" prefWidth="100.0" text="OK">
+                        <Button fx:id="okButton" layoutX="91.0" layoutY="565.0" mnemonicParsing="false"
+                                onAction="#doSomething" prefHeight="50.0" prefWidth="100.0" text="OK">
                             <font>
-                                <Font size="18.0" />
+                                <Font size="18.0"/>
                             </font>
                         </Button>
-                        <Button fx:id="clearButton" layoutX="503.0" layoutY="37.0" mnemonicParsing="false" onAction="#clear" text="Clear">
+                        <Button fx:id="clearButton" layoutX="503.0" layoutY="37.0" mnemonicParsing="false"
+                                onAction="#clear" text="Clear">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </Button>
-                        <Button fx:id="executeScriptButton" layoutX="285.0" layoutY="37.0" mnemonicParsing="false" onAction="#executeScript" text="Execute script">
+                        <Button fx:id="executeScriptButton" layoutX="285.0" layoutY="37.0" mnemonicParsing="false"
+                                onAction="#executeScript" text="Execute script">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </Button>
-                        <RadioButton fx:id="addRadioButton" layoutX="63.0" layoutY="623.0" mnemonicParsing="false" prefWidth="170.0" text="ADD" textFill="WHITE">
+                        <RadioButton fx:id="addRadioButton" layoutX="63.0" layoutY="623.0" mnemonicParsing="false"
+                                     prefWidth="170.0" text="ADD" textFill="WHITE">
                             <toggleGroup>
-                                <ToggleGroup fx:id="commandGroup" />
+                                <ToggleGroup fx:id="commandGroup"/>
                             </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="editRadioButton" layoutX="63.0" layoutY="649.0" mnemonicParsing="false" prefWidth="170.0" text="EDIT" textFill="WHITE" toggleGroup="$commandGroup" />
-                        <RadioButton fx:id="addIfMinRadioButton" layoutX="63.0" layoutY="675.0" mnemonicParsing="false" prefWidth="170.0" text="ADD IF MIN" textFill="WHITE" toggleGroup="$commandGroup" />
-                        <RadioButton fx:id="removeGreaterRadioButton" layoutX="63.0" layoutY="701.0" mnemonicParsing="false" prefWidth="170.0" text="REMOVE GREATER" textFill="WHITE" toggleGroup="$commandGroup" />
-                        <RadioButton fx:id="removeLowerRadioButton" layoutX="63.0" layoutY="728.0" mnemonicParsing="false" prefWidth="170.0" text="REMOVE LOWER" textFill="WHITE" toggleGroup="$commandGroup" />
-                        <Button fx:id="removeButton" layoutX="614.0" layoutY="38.0" mnemonicParsing="false" onAction="#remove" text="Remove">
+                        <RadioButton fx:id="editRadioButton" layoutX="63.0" layoutY="649.0" mnemonicParsing="false"
+                                     prefWidth="170.0" text="EDIT" textFill="WHITE" toggleGroup="$commandGroup"/>
+                        <RadioButton fx:id="addIfMinRadioButton" layoutX="63.0" layoutY="675.0" mnemonicParsing="false"
+                                     prefWidth="170.0" text="ADD IF MIN" textFill="WHITE" toggleGroup="$commandGroup"/>
+                        <RadioButton fx:id="removeGreaterRadioButton" layoutX="63.0" layoutY="701.0"
+                                     mnemonicParsing="false" prefWidth="170.0" text="REMOVE GREATER" textFill="WHITE"
+                                     toggleGroup="$commandGroup"/>
+                        <RadioButton fx:id="removeLowerRadioButton" layoutX="63.0" layoutY="728.0"
+                                     mnemonicParsing="false" prefWidth="170.0" text="REMOVE LOWER" textFill="WHITE"
+                                     toggleGroup="$commandGroup"/>
+                        <Button fx:id="removeButton" layoutX="614.0" layoutY="38.0" mnemonicParsing="false"
+                                onAction="#remove" text="Remove">
                             <font>
-                                <Font size="14.0" />
+                                <Font size="14.0"/>
                             </font>
                         </Button>
-                        <Text fx:id="userText" layoutX="57.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" textAlignment="CENTER" wrappingWidth="180.783203125">
+                        <Text fx:id="userText" layoutX="57.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Username" textAlignment="CENTER" wrappingWidth="180.783203125">
                             <font>
-                                <Font size="18.0" />
+                                <Font size="18.0"/>
                             </font>
                         </Text>
-                        <TextField fx:id="usernameTextBlock" alignment="CENTER" editable="false" layoutX="63.0" layoutY="75.0" minHeight="0.0" minWidth="0.0" prefHeight="30.0" prefWidth="155.0">
+                        <TextField fx:id="usernameTextBlock" alignment="CENTER" editable="false" layoutX="63.0"
+                                   layoutY="75.0" minHeight="0.0" minWidth="0.0" prefHeight="30.0" prefWidth="155.0">
                             <font>
-                                <Font size="16.0" />
+                                <Font size="16.0"/>
                             </font>
                         </TextField>
-                        <TableView fx:id="ruleTable" layoutX="608.0" layoutY="709.0" prefHeight="200.0" prefWidth="276.0">
+                        <TableView fx:id="ruleTable" layoutX="608.0" layoutY="709.0" prefHeight="200.0"
+                                   prefWidth="276.0">
                             <placeholder>
-                                <Label />
+                                <Label/>
                             </placeholder>
                             <columns>
                                 <TableColumn fx:id="ruleHeader" prefWidth="275.0" text="Sorting and Filtration">
                                     <columns>
-                                        <TableColumn fx:id="columnColumn" prefWidth="94.0" text="Column" />
-                                        <TableColumn fx:id="orderColumn" prefWidth="89.0" text="Order" />
-                                        <TableColumn fx:id="parameterColumn" prefWidth="92.0" text="Parameter" />
+                                        <TableColumn fx:id="columnColumn" prefWidth="94.0" text="Column"/>
+                                        <TableColumn fx:id="orderColumn" prefWidth="89.0" text="Order"/>
+                                        <TableColumn fx:id="parameterColumn" prefWidth="92.0" text="Parameter"/>
                                     </columns>
                                 </TableColumn>
                             </columns>
                         </TableView>
-                        <Button fx:id="addButton" layoutX="567.0" layoutY="923.0" mnemonicParsing="false" onAction="#addRule" prefHeight="37.0" prefWidth="82.0" text="Add">
+                        <Button fx:id="addButton" layoutX="567.0" layoutY="923.0" mnemonicParsing="false"
+                                onAction="#addRule" prefHeight="37.0" prefWidth="82.0" text="Add">
                             <font>
-                                <Font size="16.0" />
+                                <Font size="16.0"/>
                             </font>
                         </Button>
-                        <Button fx:id="editButton" layoutX="844.0" layoutY="923.0" mnemonicParsing="false" onAction="#editRule" prefHeight="37.0" prefWidth="81.0" text="Edit">
+                        <Button fx:id="editButton" layoutX="844.0" layoutY="923.0" mnemonicParsing="false"
+                                onAction="#editRule" prefHeight="37.0" prefWidth="81.0" text="Edit">
                             <font>
-                                <Font size="16.0" />
+                                <Font size="16.0"/>
                             </font>
                         </Button>
-                        <Button fx:id="removeRuleButton" layoutX="684.0" layoutY="923.0" mnemonicParsing="false" onAction="#removeRule" prefHeight="37.0" prefWidth="123.0" text="Remove rule">
+                        <Button fx:id="removeRuleButton" layoutX="684.0" layoutY="923.0" mnemonicParsing="false"
+                                onAction="#removeRule" prefHeight="37.0" prefWidth="123.0" text="Remove rule">
                             <font>
-                                <Font size="16.0" />
+                                <Font size="16.0"/>
                             </font>
                         </Button>
                     </children>
@@ -177,34 +222,48 @@
         </Tab>
         <Tab text="Map">
             <content>
-                <AnchorPane fx:id="secondMainScreen" layoutY="82.0" minHeight="0.0" minWidth="0.0" prefHeight="983.0" prefWidth="1343.0">
+                <AnchorPane fx:id="secondMainScreen" layoutY="82.0" minHeight="0.0" minWidth="0.0" prefHeight="983.0"
+                            prefWidth="1343.0">
                     <children>
                         <TableView fx:id="objectTable" layoutX="134.0" prefHeight="85.0" prefWidth="1060.0">
                             <placeholder>
-                                <Label />
+                                <Label/>
                             </placeholder>
                             <columns>
-                                <TableColumn fx:id="idColumn1" prefWidth="35.0" style="-fx-alignment: CENTER;" text="ID" />
-                                <TableColumn fx:id="nameColumn1" prefWidth="67.0" style="-fx-alignment: CENTER;" text="Name" />
-                                <TableColumn fx:id="coordinatesColumn1" prefWidth="191.0" text="Coordinates">
+                                <TableColumn fx:id="idColumnSecond" prefWidth="35.0" style="-fx-alignment: CENTER;"
+                                             text="ID"/>
+                                <TableColumn fx:id="nameColumnSecond" prefWidth="67.0" style="-fx-alignment: CENTER;"
+                                             text="Name"/>
+                                <TableColumn fx:id="coordinatesColumnSecond" prefWidth="191.0" text="Coordinates">
                                     <columns>
-                                        <TableColumn prefWidth="62.0" style="-fx-alignment: CENTER;" text="X" fx:id="xColumn1" />
-                                        <TableColumn fx:id="yColumn1" minWidth="0.0" prefWidth="57.0" style="-fx-alignment: CENTER;" text="Y" />
+                                        <TableColumn prefWidth="62.0" style="-fx-alignment: CENTER;" text="X"
+                                                     fx:id="xColumnSecond"/>
+                                        <TableColumn fx:id="yColumnSecond" minWidth="0.0" prefWidth="57.0"
+                                                     style="-fx-alignment: CENTER;" text="Y"/>
                                     </columns>
                                 </TableColumn>
-                                <TableColumn fx:id="creationDateColumn1" prefWidth="94.0" style="-fx-alignment: CENTER;" text="CreationDate" />
-                                <TableColumn fx:id="areaColumn1" prefWidth="46.0" style="-fx-alignment: CENTER;" text="Area" />
-                                <TableColumn fx:id="populationColumn1" prefWidth="72.0" style="-fx-alignment: CENTER;" text="Population" />
-                                <TableColumn fx:id="metersAboveSeaLevelColumn1" prefWidth="139.0" style="-fx-alignment: CENTER;" text="MetersAboveSeaLevel" />
-                                <TableColumn fx:id="climateColumn1" prefWidth="73.0" style="-fx-alignment: CENTER;" text="Climate" />
-                                <TableColumn fx:id="governmentColumn1" prefWidth="99.0" style="-fx-alignment: CENTER;" text="Government" />
-                                <TableColumn fx:id="standardOfLivingColumn1" prefWidth="123.0" style="-fx-alignment: CENTER;" text="StandardOfLiving" />
-                                <TableColumn fx:id="governorColumn1" prefWidth="100.0" text="Governor">
+                                <TableColumn fx:id="creationDateColumnSecond" prefWidth="94.0" style="-fx-alignment: CENTER;"
+                                             text="CreationDate"/>
+                                <TableColumn fx:id="areaColumnSecond" prefWidth="46.0" style="-fx-alignment: CENTER;"
+                                             text="Area"/>
+                                <TableColumn fx:id="populationColumnSecond" prefWidth="72.0" style="-fx-alignment: CENTER;"
+                                             text="Population"/>
+                                <TableColumn fx:id="metersAboveSeaLevelColumnSecond" prefWidth="139.0"
+                                             style="-fx-alignment: CENTER;" text="MetersAboveSeaLevel"/>
+                                <TableColumn fx:id="climateColumnSecond" prefWidth="73.0" style="-fx-alignment: CENTER;"
+                                             text="Climate"/>
+                                <TableColumn fx:id="governmentColumnSecond" prefWidth="99.0" style="-fx-alignment: CENTER;"
+                                             text="Government"/>
+                                <TableColumn fx:id="standardOfLivingColumnSecond" prefWidth="123.0"
+                                             style="-fx-alignment: CENTER;" text="StandardOfLiving"/>
+                                <TableColumn fx:id="governorColumnSecond" prefWidth="100.0" text="Governor">
                                     <columns>
-                                        <TableColumn fx:id="humanNameColumn1" prefWidth="118.0" style="-fx-alignment: CENTER;" text="HumanName" />
+                                        <TableColumn fx:id="humanNameColumnSecond" prefWidth="118.0"
+                                                     style="-fx-alignment: CENTER;" text="HumanName"/>
                                     </columns>
                                 </TableColumn>
-                                <TableColumn fx:id="usernameColumn1" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Username" />
+                                <TableColumn fx:id="usernameColumnSecond" prefWidth="75.0" style="-fx-alignment: CENTER;"
+                                             text="Username"/>
                             </columns>
                         </TableView>
                     </children>

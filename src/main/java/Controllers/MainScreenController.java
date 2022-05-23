@@ -6,20 +6,13 @@ import Interfaces.IFormer;
 import Main.Client;
 import Models.*;
 import Realisation.ClientDTO;
-import Realisation.Languages;
 import Resource.ResourceDefault;
 import Utilities.Serializer;
 import javafx.animation.ScaleTransition;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,7 +25,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -42,8 +34,6 @@ import Realisation.CommandManager;
 import javafx.scene.layout.AnchorPane;
 import javafx.application.Platform;
 
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -215,49 +205,49 @@ public class MainScreenController extends StorageController<City> {
     private Button removeRuleButton;
 
     @FXML
-    private TableColumn<City, Integer> idColumn1;
+    private TableColumn<City, Integer> idColumnSecond;
 
     @FXML
-    private TableColumn<City, String> nameColumn1;
+    private TableColumn<City, String> nameColumnSecond;
 
     @FXML
-    private TableColumn<City, City.Coordinates> coordinatesColumn1;
+    private TableColumn<City, City.Coordinates> coordinatesColumnSecond;
 
     @FXML
-    private TableColumn<City, Double> xColumn1;
+    private TableColumn<City, Double> xColumnSecond;
 
     @FXML
-    private TableColumn<City, Float> yColumn1;
+    private TableColumn<City, Float> yColumnSecond;
 
     @FXML
-    private TableColumn<City, String> creationDateColumn1;
+    private TableColumn<City, String> creationDateColumnSecond;
 
     @FXML
-    private TableColumn<City, Integer> areaColumn1;
+    private TableColumn<City, Integer> areaColumnSecond;
 
     @FXML
-    private TableColumn<City, Integer> populationColumn1;
+    private TableColumn<City, Integer> populationColumnSecond;
 
     @FXML
-    private TableColumn<City, Integer> metersAboveSeaLevelColumn1;
+    private TableColumn<City, Integer> metersAboveSeaLevelColumnSecond;
 
     @FXML
-    private TableColumn<City, City.Climate> climateColumn1;
+    private TableColumn<City, City.Climate> climateColumnSecond;
 
     @FXML
-    private TableColumn<City, City.Government> governmentColumn1;
+    private TableColumn<City, City.Government> governmentColumnSecond;
 
     @FXML
-    private TableColumn<City, City.StandardOfLiving> standardOfLivingColumn1;
+    private TableColumn<City, City.StandardOfLiving> standardOfLivingColumnSecond;
 
     @FXML
-    private TableColumn<City, City.Human> governorColumn1;
+    private TableColumn<City, City.Human> governorColumnSecond;
 
     @FXML
-    private TableColumn<City, String> humanNameColumn1;
+    private TableColumn<City, String> humanNameColumnSecond;
 
     @FXML
-    private TableColumn<City, String> usernameColumn1;
+    private TableColumn<City, String> usernameColumnSecond;
 
     public void setUser(User user) {
         this.user = user;
@@ -266,8 +256,6 @@ public class MainScreenController extends StorageController<City> {
     public void setCommandManager(CommandManager commandManager) {
         this.commandManager = commandManager;
     }
-
-    //TODO СТОИТ ЗАДУМАТЬСЯ НАД ТЕМ, ЧТОБЫ ОБЪЕДИНИТЬ ВСЕ СЕТТЕРЫ В КАКОЙ-НИБУДЬ МЕТОД, КОТОРЫЙ БЫ УСТАНАВЛИВАЛ ВСЕ ТРЕБУЕМЫЕ ЗНАЧЕНИЯ.
 
     @FXML
     public void initialize() {
@@ -340,58 +328,58 @@ public class MainScreenController extends StorageController<City> {
         this.parameterColumn.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getParameter()));
         this.parameterColumn.setSortable(false);
-        this.idColumn1.setCellValueFactory(cellData ->
+        this.idColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
-        idColumn1.setSortable(false);
+        idColumnSecond.setSortable(false);
 
-        this.nameColumn1.setCellValueFactory(cellData ->
+        this.nameColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getName()));
-        nameColumn1.setSortable(false);
+        nameColumnSecond.setSortable(false);
 
-        this.xColumn1.setCellValueFactory(cellData ->
+        this.xColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getFirstCoordinates()));
-        xColumn1.setSortable(false);
+        xColumnSecond.setSortable(false);
 
-        this.yColumn1.setCellValueFactory(cellData ->
+        this.yColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getCoordinates().getSecondCoordinates()));
-        yColumn1.setSortable(false);
+        yColumnSecond.setSortable(false);
 
-        this.creationDateColumn1.setCellValueFactory(cellData ->
+        this.creationDateColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getCreationDate().toString()
                         .replace("T", " ")));
-        creationDateColumn1.setSortable(false);
+        creationDateColumnSecond.setSortable(false);
 
-        this.areaColumn1.setCellValueFactory(cellData ->
+        this.areaColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getArea()));
-        areaColumn1.setSortable(false);
+        areaColumnSecond.setSortable(false);
 
-        this.populationColumn1.setCellValueFactory(cellData ->
+        this.populationColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getPopulation()));
-        populationColumn1.setSortable(false);
+        populationColumnSecond.setSortable(false);
 
-        this.metersAboveSeaLevelColumn1.setCellValueFactory(cellData ->
+        this.metersAboveSeaLevelColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getMeters()));
-        metersAboveSeaLevelColumn1.setSortable(false);
+        metersAboveSeaLevelColumnSecond.setSortable(false);
 
-        this.climateColumn1.setCellValueFactory(cellData ->
+        this.climateColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getClimate()));
-        climateColumn1.setSortable(false);
+        climateColumnSecond.setSortable(false);
 
-        this.governmentColumn1.setCellValueFactory(cellData ->
+        this.governmentColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernment()));
-        governmentColumn1.setSortable(false);
+        governmentColumnSecond.setSortable(false);
 
-        this.standardOfLivingColumn1.setCellValueFactory(cellData ->
+        this.standardOfLivingColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getStandardOfLiving()));
-        standardOfLivingColumn1.setSortable(false);
+        standardOfLivingColumnSecond.setSortable(false);
 
-        this.humanNameColumn1.setCellValueFactory(cellData ->
+        this.humanNameColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getGovernor().getHumanName()));
-        humanNameColumn1.setSortable(false);
+        humanNameColumnSecond.setSortable(false);
 
-        this.usernameColumn1.setCellValueFactory(cellData ->
+        this.usernameColumnSecond.setCellValueFactory(cellData ->
                 new ReadOnlyObjectWrapper<>(cellData.getValue().getUsername()));
-        usernameColumn1.setSortable(false);
+        usernameColumnSecond.setSortable(false);
 
         contentTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             int id = contentTable.getSelectionModel().getSelectedIndex();
@@ -899,144 +887,107 @@ public class MainScreenController extends StorageController<City> {
         usernameTextBlock.prefHeightProperty().bind(firstMainScreen.heightProperty().divide(32.76667));
 
         idColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(30.285714));
-
         nameColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(15.8209));
-
         xColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(17.0967));
-
         yColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(18.59649));
-
         creationDateColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(11.2766));
-
         areaColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(23.04348));
-
         populationColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(14.72));
-
         metersAboveSeaLevelColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(7.6259));
-
         climateColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(14.52055));
-
         governmentColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(10.70707));
-
         standardOfLivingColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(8.61789));
-
         humanNameColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(10.6));
-
         usernameColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(14.13));
-
         columnColumn.prefWidthProperty().bind(ruleTable.widthProperty().divide(2.93617));
-
         orderColumn.prefWidthProperty().bind(ruleTable.widthProperty().divide(3.10112));
-
         parameterColumn.prefWidthProperty().bind(ruleTable.widthProperty().divide(3));
 
         DoubleBinding dbX = firstMainScreen.widthProperty().subtract(0);
         DoubleBinding dbY = firstMainScreen.heightProperty().subtract(0);
 
-        dbX.addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                logoutButton.setLayoutX(dbX.getValue() / 1.114);
-                okButton.setLayoutX(dbX.getValue() / 14.75824);
-                clearButton.setLayoutX(dbX.getValue() / 2.66998);
-                executeScriptButton.setLayoutX(dbX.getValue() / 4.71228);
-                removeButton.setLayoutX(dbX.getValue() / 2.1873);
-                addButton.setLayoutX(dbX.getValue() / 2.36861);
-                editButton.setLayoutX(dbX.getValue() / 1.59123);
-                removeRuleButton.setLayoutX(dbX.getValue() / 1.96345);
+        dbX.addListener((ov, t, t1) -> {
+            logoutButton.setLayoutX(dbX.getValue() / 1.114);
+            okButton.setLayoutX(dbX.getValue() / 14.75824);
+            clearButton.setLayoutX(dbX.getValue() / 2.66998);
+            executeScriptButton.setLayoutX(dbX.getValue() / 4.71228);
+            removeButton.setLayoutX(dbX.getValue() / 2.1873);
+            addButton.setLayoutX(dbX.getValue() / 2.36861);
+            editButton.setLayoutX(dbX.getValue() / 1.59123);
+            removeRuleButton.setLayoutX(dbX.getValue() / 1.96345);
 
-                nameInput.setLayoutX(dbX.getValue() / 27.97917);
-                xInput.setLayoutX(dbX.getValue() / 27.97917);
-                yInput.setLayoutX(dbX.getValue() / 27.97917);
-                areaInput.setLayoutX(dbX.getValue() / 27.97917);
-                populationInput.setLayoutX(dbX.getValue() / 27.97917);
-                metersInput.setLayoutX(dbX.getValue() / 27.97917);
-                climateInput.setLayoutX(dbX.getValue() / 27.97917);
-                governmentInput.setLayoutX(dbX.getValue() / 27.97917);
-                standardOfLivingInput.setLayoutX(dbX.getValue() / 27.97917);
-                humanNameInput.setLayoutX(dbX.getValue() / 27.97917);
+            nameInput.setLayoutX(dbX.getValue() / 27.97917);
+            xInput.setLayoutX(dbX.getValue() / 27.97917);
+            yInput.setLayoutX(dbX.getValue() / 27.97917);
+            areaInput.setLayoutX(dbX.getValue() / 27.97917);
+            populationInput.setLayoutX(dbX.getValue() / 27.97917);
+            metersInput.setLayoutX(dbX.getValue() / 27.97917);
+            climateInput.setLayoutX(dbX.getValue() / 27.97917);
+            governmentInput.setLayoutX(dbX.getValue() / 27.97917);
+            standardOfLivingInput.setLayoutX(dbX.getValue() / 27.97917);
+            humanNameInput.setLayoutX(dbX.getValue() / 27.97917);
 
-                addRadioButton.setLayoutX(dbX.getValue() / 21.31746);
-                editRadioButton.setLayoutX(dbX.getValue() / 21.31746);
-                addIfMinRadioButton.setLayoutX(dbX.getValue() / 21.31746);
-                removeGreaterRadioButton.setLayoutX(dbX.getValue() / 21.31746);
-                removeLowerRadioButton.setLayoutX(dbX.getValue() / 21.31746);
+            addRadioButton.setLayoutX(dbX.getValue() / 21.31746);
+            editRadioButton.setLayoutX(dbX.getValue() / 21.31746);
+            addIfMinRadioButton.setLayoutX(dbX.getValue() / 21.31746);
+            removeGreaterRadioButton.setLayoutX(dbX.getValue() / 21.31746);
+            removeLowerRadioButton.setLayoutX(dbX.getValue() / 21.31746);
 
-                contentTable.setLayoutX(dbX.getValue() / 5.32937);
-
-                userText.setLayoutX(dbX.getValue() / 23.5614);
-
-                usernameTextBlock.setLayoutX(dbX.getValue() / 21.31746);
-
-                ruleTable.setLayoutX(dbX.getValue() / 2.20888);
-            }
+            contentTable.setLayoutX(dbX.getValue() / 5.32937);
+            userText.setLayoutX(dbX.getValue() / 23.5614);
+            usernameTextBlock.setLayoutX(dbX.getValue() / 21.31746);
+            ruleTable.setLayoutX(dbX.getValue() / 2.20888);
         });
-        dbY.addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-                logoutButton.setLayoutY(dbY.getValue() / 29.78);
-                okButton.setLayoutY(dbY.getValue() / 1.82714);
-                clearButton.setLayoutY(dbY.getValue() / 26.56757);
-                executeScriptButton.setLayoutY(dbY.getValue() / 26.56767);
-                removeButton.setLayoutY(dbY.getValue() / 26.56767);
-                addButton.setLayoutY(dbY.getValue() / 1.06501);
-                editButton.setLayoutY(dbY.getValue() / 1.06501);
-                removeRuleButton.setLayoutY(dbY.getValue() / 1.06501);
 
-                nameInput.setLayoutY(dbY.getValue() / 6.46711);
-                xInput.setLayoutY(dbY.getValue() / 5.09326);
-                yInput.setLayoutY(dbY.getValue() / 4.20085);
-                areaInput.setLayoutY(dbY.getValue() / 3.61397);
-                populationInput.setLayoutY(dbY.getValue() / 3.17097);
-                metersInput.setLayoutY(dbY.getValue() / 2.82471);
-                climateInput.setLayoutY(dbY.getValue() / 2.55325);
-                governmentInput.setLayoutY(dbY.getValue() / 2.33492);
-                standardOfLivingInput.setLayoutY(dbY.getValue() / 2.14161);
-                humanNameInput.setLayoutY(dbY.getValue() / 1.98185);
+        dbY.addListener((ov, t, t1) -> {
+            logoutButton.setLayoutY(dbY.getValue() / 29.78);
+            okButton.setLayoutY(dbY.getValue() / 1.82714);
+            clearButton.setLayoutY(dbY.getValue() / 26.56757);
+            executeScriptButton.setLayoutY(dbY.getValue() / 26.56767);
+            removeButton.setLayoutY(dbY.getValue() / 26.56767);
+            addButton.setLayoutY(dbY.getValue() / 1.06501);
+            editButton.setLayoutY(dbY.getValue() / 1.06501);
+            removeRuleButton.setLayoutY(dbY.getValue() / 1.06501);
 
-                addRadioButton.setLayoutY(dbY.getValue() / 1.64933);
-                editRadioButton.setLayoutY(dbY.getValue() / 1.58039);
-                addIfMinRadioButton.setLayoutY(dbY.getValue() / 1.51698);
-                removeGreaterRadioButton.setLayoutY(dbY.getValue() / 1.45846);
-                removeLowerRadioButton.setLayoutY(dbY.getValue() / 1.40228);
+            nameInput.setLayoutY(dbY.getValue() / 6.46711);
+            xInput.setLayoutY(dbY.getValue() / 5.09326);
+            yInput.setLayoutY(dbY.getValue() / 4.20085);
+            areaInput.setLayoutY(dbY.getValue() / 3.61397);
+            populationInput.setLayoutY(dbY.getValue() / 3.17097);
+            metersInput.setLayoutY(dbY.getValue() / 2.82471);
+            climateInput.setLayoutY(dbY.getValue() / 2.55325);
+            governmentInput.setLayoutY(dbY.getValue() / 2.33492);
+            standardOfLivingInput.setLayoutY(dbY.getValue() / 2.14161);
+            humanNameInput.setLayoutY(dbY.getValue() / 1.98185);
 
-                contentTable.setLayoutY(dbY.getValue() / 9.83);
+            addRadioButton.setLayoutY(dbY.getValue() / 1.64933);
+            editRadioButton.setLayoutY(dbY.getValue() / 1.58039);
+            addIfMinRadioButton.setLayoutY(dbY.getValue() / 1.51698);
+            removeGreaterRadioButton.setLayoutY(dbY.getValue() / 1.45846);
+            removeLowerRadioButton.setLayoutY(dbY.getValue() / 1.40228);
 
-                userText.setLayoutY(dbY.getValue() / 16.66102);
-
-                usernameTextBlock.setLayoutY(dbY.getValue() / 13.10667);
-
-                ruleTable.setLayoutY(dbY.getValue() / 1.38646);
-            }
+            contentTable.setLayoutY(dbY.getValue() / 9.83);
+            userText.setLayoutY(dbY.getValue() / 16.66102);
+            usernameTextBlock.setLayoutY(dbY.getValue() / 13.10667);
+            ruleTable.setLayoutY(dbY.getValue() / 1.38646);
         });
     }
+
     public void autoScalingSecond() {
-
         objectTable.prefWidthProperty().bind(secondMainScreen.widthProperty().divide(1.26698));
-
-        idColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(30.285714));
-
-        nameColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(15.8209));
-
-        xColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(17.0967));
-
-        yColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(18.59649));
-
-        creationDateColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(11.2766));
-
-        areaColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(23.04348));
-
-        populationColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(14.72));
-
-        metersAboveSeaLevelColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(7.6259));
-
-        climateColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(14.52055));
-
-        governmentColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(10.70707));
-
-        standardOfLivingColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(8.61789));
-
-        humanNameColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(10.6));
-
-        usernameColumn1.prefWidthProperty().bind(objectTable.widthProperty().divide(14.13));
+        idColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(30.285714));
+        nameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(15.8209));
+        xColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(17.0967));
+        yColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(18.59649));
+        creationDateColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(11.2766));
+        areaColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(23.04348));
+        populationColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(14.72));
+        metersAboveSeaLevelColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(7.6259));
+        climateColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(14.52055));
+        governmentColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(10.70707));
+        standardOfLivingColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(8.61789));
+        humanNameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(10.6));
+        usernameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(14.13));
 
         DoubleBinding dbX = secondMainScreen.widthProperty().subtract(0);
         dbX.addListener((ov, t, t1) -> objectTable.setLayoutX(dbX.getValue() / 10.02239));
