@@ -11,8 +11,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 import java.net.*;
 import java.util.Arrays;
@@ -54,6 +57,7 @@ public class LoginScreenController extends Controller {
 
     @FXML
     private void initialize() {
+
         Client.resourceFactory.setLanguage(Languages.RUSSIAN);
         Arrays.stream(Languages.values()).forEach((x) -> this.languages.getItems().add(x.getName()));
         this.languages.setValue(Languages.RUSSIAN.getName());

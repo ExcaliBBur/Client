@@ -50,6 +50,7 @@ public class SortFilterController {
 
     @FXML
     public void initialize() {
+
         Arrays.stream(Rule.Column.values()).forEach(x -> this.columnBox.getItems().add(Client.resourceFactory
                 .getResources().getString(x.getName())));
 
