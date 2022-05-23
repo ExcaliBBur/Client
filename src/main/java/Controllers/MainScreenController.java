@@ -681,27 +681,29 @@ public class MainScreenController extends StorageController<City> {
     @FXML
     private void editRule() {
         try {
-            FXMLLoader preset = new FXMLLoader();
-            URL xml = getClass().getResource("/SortFilter.fxml");
-            preset.setLocation(xml);
-
-            Parent root = preset.load();
-            Stage additionalStage = new Stage();
-            additionalStage.setScene(new Scene(root));
-            additionalStage.initModality(Modality.APPLICATION_MODAL);
-
-            SortFilterController sortFilterController = preset.getController();
-            sortFilterController.setController(this);
-            sortFilterController.setPurpose(SortFilterController.Option.EDIT);
-
             int id = this.ruleTable.getSelectionModel().getSelectedIndex();
-            sortFilterController.setID(id);
 
-            additionalStage.show();
+            if (id != -1) {
+
+                FXMLLoader preset = new FXMLLoader();
+                URL xml = getClass().getResource("/SortFilter.fxml");
+                preset.setLocation(xml);
+
+                Parent root = preset.load();
+                Stage additionalStage = new Stage();
+                additionalStage.setScene(new Scene(root));
+                additionalStage.initModality(Modality.APPLICATION_MODAL);
+
+                SortFilterController sortFilterController = preset.getController();
+                sortFilterController.setController(this);
+                sortFilterController.setPurpose(SortFilterController.Option.EDIT);
+
+                sortFilterController.setID(id);
+
+                additionalStage.show();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException ignored) {
-
         }
     }
 
