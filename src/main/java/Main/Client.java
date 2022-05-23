@@ -1,6 +1,7 @@
 package Main;
 
 import Controllers.LoginScreenController;
+import Controllers.MainScreenController;
 import Models.*;
 import Interaction.Parser;
 import Interaction.Receiver;
@@ -11,6 +12,7 @@ import Resource.ResourcePortuguese;
 import Resource.ResourceRussian;
 import Resource.ResourceSpanish;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -54,6 +56,7 @@ public class Client extends Application {
 
         primaryStage.show();
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
+        primaryStage.setResizable(false);
     }
 
     public static class Registrator {
