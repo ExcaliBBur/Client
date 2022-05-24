@@ -116,6 +116,7 @@ public class LoginScreenController extends Controller {
             secondStage.setMinWidth(989);
             secondStage.setMinHeight(853);
             secondStage.setOnCloseRequest(windowEvent -> System.exit(0));
+            secondStage.titleProperty().bind(Client.resourceFactory.getStringBinding("app"));
         } catch (IOException e) {
             e.printStackTrace();
         }

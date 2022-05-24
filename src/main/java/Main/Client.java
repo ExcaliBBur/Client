@@ -57,28 +57,24 @@ public class Client extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(windowEvent -> System.exit(0));
         primaryStage.setResizable(false);
+        primaryStage.titleProperty().bind(Client.resourceFactory.getStringBinding("start"));
     }
 
     public static class Registrator {
-
         public DatagramSocket register() {
             boolean isCorrect;
-            int tmp = 0;
             DatagramSocket datagramSocket = null;
-            System.out.println("Enter the port.");
             do {
                 isCorrect = false;
                 try {
                     for (int i = 1; i < 65000; i++) {
                         datagramSocket = new DatagramSocket(i);
                         isCorrect = true;
-                        tmp = i;
                     }
                 } catch (SocketException ignored) {
 
                 }
             } while (!isCorrect);
-            System.out.println("Сервер стартует на порте " + tmp);
             return datagramSocket;
         }
     }

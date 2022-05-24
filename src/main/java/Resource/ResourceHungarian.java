@@ -53,7 +53,11 @@ public class ResourceHungarian extends ListResourceBundle {
             {"not_a_command", "A megadott parancs nem létezik."},
             {"server_unavailable", "A szerver nem érhető el."},
             {"empty_account", "Nem küldhet parancsokat, jelentkezzen be vagy regisztráljon."},
-            {"error", "Hiba"}
+            {"error", "Hiba"},
+            {"main", "Fő"},
+            {"map", "Térkép"},
+            {"start", "Kezdet"},
+            {"app", "Alkalmazás"}
     };
 
     public Object[][] getContents() {

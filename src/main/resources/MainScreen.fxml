@@ -18,7 +18,7 @@
          fx:controller="Controllers.MainScreenController">
     <tabs>
 
-        <Tab text="Main">
+        <Tab text="Main" fx:id="mainTab">
             <content>
                 <AnchorPane fx:id="firstMainScreen" minHeight="787.0" minWidth="997.0" prefHeight="983.0"
                             prefWidth="1343.0" style="-fx-background-color: #483D8B;">
@@ -220,7 +220,7 @@
                 </AnchorPane>
             </content>
         </Tab>
-        <Tab text="Map">
+        <Tab text="Map" fx:id="mapTab">
             <content>
                 <AnchorPane fx:id="secondMainScreen" layoutY="82.0" minHeight="0.0" minWidth="0.0" prefHeight="983.0"
                             prefWidth="1343.0">

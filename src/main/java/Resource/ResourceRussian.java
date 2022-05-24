@@ -53,7 +53,11 @@ public class ResourceRussian extends ListResourceBundle {
             {"not_a_command", "Введённой команды не существует."},
             {"server_unavailable", "Сервер недоступен."},
             {"empty_account", "Вы не можете отправлять команды, войдите или зарегистрируйтесь."},
-            {"error", "Ошибка"}
+            {"error", "Ошибка"},
+            {"main", "Главная"},
+            {"map", "Карта"},
+            {"start", "Начало"},
+            {"app", "Приложение"}
     };
 
     public Object[][] getContents() {

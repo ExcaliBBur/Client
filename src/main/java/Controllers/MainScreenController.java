@@ -255,6 +255,12 @@ public class MainScreenController extends StorageController<City> {
     @FXML
     private TableColumn<City, String> usernameColumnSecond;
 
+    @FXML
+    private Tab mainTab;
+
+    @FXML
+    private Tab mapTab;
+
     public void setUser(User user) {
         this.user = user;
     }
@@ -492,6 +498,8 @@ public class MainScreenController extends StorageController<City> {
         this.governorColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("governor"));
         this.humanNameColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("human"));
         this.usernameColumnSecond.textProperty().bind(Client.resourceFactory.getStringBinding("username"));
+        this.mainTab.textProperty().bind(Client.resourceFactory.getStringBinding("main"));
+        this.mapTab.textProperty().bind(Client.resourceFactory.getStringBinding("map"));
     }
 
     public void updateContents(Collection<City> collection) {
@@ -573,6 +581,7 @@ public class MainScreenController extends StorageController<City> {
 
             additionalStage.show();
             additionalStage.setResizable(false);
+            additionalStage.titleProperty().bind(Client.resourceFactory.getStringBinding("execute_script"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -610,6 +619,7 @@ public class MainScreenController extends StorageController<City> {
 
         stage.show();
         stage.setOnCloseRequest(windowEvent -> System.exit(0));
+        stage.titleProperty().bind(Client.resourceFactory.getStringBinding("start"));
     }
 
     @FXML
@@ -683,6 +693,7 @@ public class MainScreenController extends StorageController<City> {
 
             additionalStage.show();
             additionalStage.setResizable(false);
+            additionalStage.titleProperty().bind(Client.resourceFactory.getStringBinding("sorting_and_filtration"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -712,6 +723,8 @@ public class MainScreenController extends StorageController<City> {
 
                 additionalStage.show();
                 additionalStage.setResizable(false);
+                additionalStage.titleProperty().bind(Client.resourceFactory
+                        .getStringBinding("sorting_and_filtration"));
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -53,7 +53,11 @@ public class ResourceSpanish extends ListResourceBundle {
             {"not_a_command", "El comando introducido no existe."},
             {"server_unavailable", "El servidor no está disponible."},
             {"empty_account", "No puede enviar comandos, iniciar sesión o registrarse."},
-            {"error", "Error"}
+            {"error", "Error"},
+            {"main", "Cabeza"},
+            {"map", "Mapa"},
+            {"start", "Comienzo"},
+            {"app", "Aplicación"}
     };
 
     public Object[][] getContents() {
