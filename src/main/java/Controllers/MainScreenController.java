@@ -34,6 +34,7 @@ import Realisation.CommandManager;
 import javafx.scene.layout.AnchorPane;
 import javafx.application.Platform;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -41,6 +42,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -734,6 +736,7 @@ public class MainScreenController extends StorageController<City> {
         for (Object key : keys) {
             secondMainScreen.getChildren().remove(key);
         }
+
         shapeMap.clear();
         if (flag) {
             for (City city : this.getCollection()) {
@@ -903,7 +906,7 @@ public class MainScreenController extends StorageController<City> {
         governmentColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(10.70707));
         standardOfLivingColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(8.61789));
         humanNameColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(10.6));
-        usernameColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(14.13));
+        usernameColumn.prefWidthProperty().bind(contentTable.widthProperty().divide(13.8));
         columnColumn.prefWidthProperty().bind(ruleTable.widthProperty().divide(2.93617));
         orderColumn.prefWidthProperty().bind(ruleTable.widthProperty().divide(3.10112));
         parameterColumn.prefWidthProperty().bind(ruleTable.widthProperty().divide(3));
@@ -946,7 +949,7 @@ public class MainScreenController extends StorageController<City> {
 
         dbY.addListener((ov, t, t1) -> {
             logoutButton.setLayoutY(dbY.getValue() / 29.78);
-            okButton.setLayoutY(dbY.getValue() / 1.82714);
+            okButton.setLayoutY(dbY.getValue() / 1.73982);
             clearButton.setLayoutY(dbY.getValue() / 26.56757);
             executeScriptButton.setLayoutY(dbY.getValue() / 26.56767);
             removeButton.setLayoutY(dbY.getValue() / 26.56767);
@@ -957,19 +960,19 @@ public class MainScreenController extends StorageController<City> {
             nameInput.setLayoutY(dbY.getValue() / 6.46711);
             xInput.setLayoutY(dbY.getValue() / 5.09326);
             yInput.setLayoutY(dbY.getValue() / 4.20085);
-            areaInput.setLayoutY(dbY.getValue() / 3.61397);
-            populationInput.setLayoutY(dbY.getValue() / 3.17097);
-            metersInput.setLayoutY(dbY.getValue() / 2.82471);
-            climateInput.setLayoutY(dbY.getValue() / 2.55325);
-            governmentInput.setLayoutY(dbY.getValue() / 2.33492);
-            standardOfLivingInput.setLayoutY(dbY.getValue() / 2.14161);
-            humanNameInput.setLayoutY(dbY.getValue() / 1.98185);
+            areaInput.setLayoutY(dbY.getValue() / 3.57455);
+            populationInput.setLayoutY(dbY.getValue() / 3.11076);
+            metersInput.setLayoutY(dbY.getValue() / 2.7535);
+            climateInput.setLayoutY(dbY.getValue() / 2.46985);
+            governmentInput.setLayoutY(dbY.getValue() / 2.23918);
+            standardOfLivingInput.setLayoutY(dbY.getValue() / 2.047916);
+            humanNameInput.setLayoutY(dbY.getValue() / 1.88676);
 
-            addRadioButton.setLayoutY(dbY.getValue() / 1.64933);
-            editRadioButton.setLayoutY(dbY.getValue() / 1.58039);
-            addIfMinRadioButton.setLayoutY(dbY.getValue() / 1.51698);
-            removeGreaterRadioButton.setLayoutY(dbY.getValue() / 1.45846);
-            removeLowerRadioButton.setLayoutY(dbY.getValue() / 1.40228);
+            addRadioButton.setLayoutY(dbY.getValue() / 1.57785);
+            editRadioButton.setLayoutY(dbY.getValue() / 1.51464);
+            addIfMinRadioButton.setLayoutY(dbY.getValue() / 1.4563);
+            removeGreaterRadioButton.setLayoutY(dbY.getValue() / 1.40228);
+            removeLowerRadioButton.setLayoutY(dbY.getValue() / 1.35027);
 
             contentTable.setLayoutY(dbY.getValue() / 9.83);
             userText.setLayoutY(dbY.getValue() / 16.66102);
@@ -979,10 +982,11 @@ public class MainScreenController extends StorageController<City> {
     }
 
     public void autoScalingSecond() {
+        fillMap();
         objectTable.prefWidthProperty().bind(secondMainScreen.widthProperty().divide(1.26698));
         idColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(30.285714));
         nameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(15.8209));
-        xColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(17.0967));
+        xColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(17.096774193548387));
         yColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(18.59649));
         creationDateColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(11.2766));
         areaColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(23.04348));
@@ -992,7 +996,7 @@ public class MainScreenController extends StorageController<City> {
         governmentColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(10.70707));
         standardOfLivingColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(8.61789));
         humanNameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(10.6));
-        usernameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(14.13));
+        usernameColumnSecond.prefWidthProperty().bind(objectTable.widthProperty().divide(12));
 
         DoubleBinding dbX = secondMainScreen.widthProperty().subtract(0);
         dbX.addListener((ov, t, t1) -> objectTable.setLayoutX(dbX.getValue() / 10.02239));
