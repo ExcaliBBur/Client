@@ -4,7 +4,6 @@ import Interaction.Parser;
 import Main.Client;
 import Models.*;
 import Realisation.*;
-import Resource.*;
 import Utilities.Serializer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -12,15 +11,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+
 import java.io.IOException;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.ResourceBundle;
 
 public class LoginScreenController extends Controller {
 
@@ -54,7 +51,6 @@ public class LoginScreenController extends Controller {
     public void log() {
         this.action("login");
     }
-    //TODO ДОБАВИТЬ ПРОВЕРКУ НЕПУСТОГО ЛОГИНА
 
     @FXML
     private void initialize() {
