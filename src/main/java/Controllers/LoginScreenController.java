@@ -6,6 +6,7 @@ import Models.*;
 import Realisation.*;
 import Resource.*;
 import Utilities.Serializer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -57,7 +58,6 @@ public class LoginScreenController extends Controller {
 
     @FXML
     private void initialize() {
-
         Client.resourceFactory.setLanguage(Languages.RUSSIAN);
         Arrays.stream(Languages.values()).forEach((x) -> this.languages.getItems().add(x.getName()));
         this.languages.setValue(Languages.RUSSIAN.getName());
@@ -72,21 +72,27 @@ public class LoginScreenController extends Controller {
     }
 
     public void action(String command) {
-        User user = new User(name.getText(), new HashPassword().hash(password.getText()));
-        byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(command,
-                Arrays.asList(Serializer.serialize(user))), Client.resourceFactory.getLanguage(),
-                true, null));
+        if (!this.isWaiting()) {
+            new Thread(() -> {
+                this.setWaiting(true);
+                User user = new User(name.getText(), new HashPassword().hash(password.getText()));
+                byte[] data = Parser.parseTo(new ClientDTO(new Command.CommandData(command,
+                        Arrays.asList(Serializer.serialize(user))), Client.resourceFactory.getLanguage(),
+                        true, null));
 
-        this.getSender().sendResponse(data);
+                this.getSender().sendResponse(data);
 
-        ServerDTO<City> answer = this.blockGetAnswer();
+                ServerDTO<City> answer = this.blockGetAnswer();
 
-        if (answer != null) {
-            if (answer.isSuccess()) {
-                this.changeScreen(user, this.getListener(), answer);
-            } else {
-                alert(new String(answer.getMessage()), Alert.AlertType.ERROR);
-            }
+                if (answer != null) {
+                    if (answer.isSuccess()) {
+                        Platform.runLater(() -> this.changeScreen(user, this.getListener(), answer));
+                    } else {
+                        alert(new String(answer.getMessage(), StandardCharsets.UTF_8), Alert.AlertType.ERROR);
+                    }
+                }
+                this.setWaiting(false);
+            }).start();
         }
     }
 
@@ -107,6 +113,7 @@ public class LoginScreenController extends Controller {
             controller.setSender(this.getSender());
             controller.setListener(listener);
             controller.setCommandManager(new CommandManager(answer.getCommandData()));
+            controller.setWaiting(this.isWaiting());
 
             controller.updateContents(answer.getCollection());
 

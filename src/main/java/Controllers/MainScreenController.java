@@ -34,9 +34,9 @@ import Realisation.CommandManager;
 import javafx.scene.layout.AnchorPane;
 import javafx.application.Platform;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -540,25 +540,32 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     private void remove() {
-        try {
-            int id = contentTable.getSelectionModel().getSelectedIndex();
+        if (!this.isWaiting()) {
+            new Thread(() -> {
+                this.setWaiting(true);
+                try {
+                    int id = contentTable.getSelectionModel().getSelectedIndex();
 
-            if (id >= 0) {
-                this.contentTable.getSelectionModel().clearSelection();
-                byte[] data = this.transformData("remove_by_id", Arrays
-                        .asList(Serializer.serialize(this.contentTable.getItems().get(id).getId())));
+                    if (id >= 0) {
+                        this.contentTable.getSelectionModel().clearSelection();
+                        byte[] data = this.transformData("remove_by_id", Arrays
+                                .asList(Serializer.serialize(this.contentTable.getItems().get(id).getId())));
 
-                this.getSender().sendResponse(data);
-                ServerDTO<City> serverDTO = this.blockGetAnswer();
+                        this.getSender().sendResponse(data);
+                        ServerDTO<City> serverDTO = this.blockGetAnswer();
 
-                if (serverDTO != null && !serverDTO.isSuccess()) {
-                    alert(new String(serverDTO.getMessage()), Alert.AlertType.ERROR);
+                        if (serverDTO != null && !serverDTO.isSuccess()) {
+                            alert(new String(serverDTO.getMessage(), StandardCharsets.UTF_8), Alert.AlertType.ERROR);
+                        }
+                    } else {
+                        throw new ArrayIndexOutOfBoundsException();
+                    }
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+
+                } finally {
+                    this.setWaiting(false);
                 }
-            } else {
-                throw new ArrayIndexOutOfBoundsException();
-            }
-        } catch (ArrayIndexOutOfBoundsException ignored) {
-
+            }).start();
         }
     }
 
@@ -589,14 +596,20 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     private void clear() {
-        this.contentTable.getSelectionModel().clearSelection();
-        byte[] data = this.transformData("clear", null);
+        if (!this.isWaiting()) {
+            new Thread(() -> {
+                this.setWaiting(true);
+                this.contentTable.getSelectionModel().clearSelection();
+                byte[] data = this.transformData("clear", null);
 
-        this.getSender().sendResponse(data);
-        ServerDTO<City> serverDTO = this.blockGetAnswer();
+                this.getSender().sendResponse(data);
+                ServerDTO<City> serverDTO = this.blockGetAnswer();
 
-        if (serverDTO != null && !serverDTO.isSuccess()) {
-            alert(new String(serverDTO.getMessage()), Alert.AlertType.ERROR);
+                if (serverDTO != null && !serverDTO.isSuccess()) {
+                    alert(new String(serverDTO.getMessage(), StandardCharsets.UTF_8), Alert.AlertType.ERROR);
+                }
+                this.setWaiting(false);
+            }).start();
         }
     }
 
@@ -663,15 +676,19 @@ public class MainScreenController extends StorageController<City> {
                         data = this.transformData(defaultName, Arrays.asList(Serializer.serialize(city)));
                     }
 
-                    this.getSender().sendResponse(data);
-                    ServerDTO<City> serverDTO = this.blockGetAnswer();
-                    if (serverDTO != null && !serverDTO.isSuccess()) {
-                        alert(new String(serverDTO.getMessage()), Alert.AlertType.ERROR);
+                            this.getSender().sendResponse(data);
+                            ServerDTO<City> serverDTO = this.blockGetAnswer();
+                            if (serverDTO != null && !serverDTO.isSuccess()) {
+                                alert(new String(serverDTO.getMessage(), StandardCharsets.UTF_8),
+                                        Alert.AlertType.ERROR);
+                            }
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ignored) {
+                    } finally {
+                        this.setWaiting(false);
                     }
                 }
-            } catch (ArrayIndexOutOfBoundsException ignored) {
-
-            }
+            }).start();
         }
     }
 

@@ -13,6 +13,7 @@ public abstract class Controller {
     private ListResourceBundle locale;
     private Sender sender;
     private StorageListener listener;
+    private boolean isWaiting;
 
     public Sender getSender() {
         return sender;
@@ -38,19 +39,31 @@ public abstract class Controller {
         this.locale = locale;
     }
 
-    public void alert(String message, Alert.AlertType type) {
-        Alert alert = new Alert(type);
+    public void setWaiting(boolean isWaiting) {
+        this.isWaiting = isWaiting;
+    }
 
-        alert.setContentText(message);
-        alert.setHeaderText(Client.resourceFactory.getResources().getString(type.name().toLowerCase()));
-        alert.setTitle(Client.resourceFactory.getResources().getString(type.name().toLowerCase()));
-        alert.showAndWait();
+    public boolean isWaiting() {
+        return isWaiting;
+    }
+
+    public void alert(String message, Alert.AlertType type) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+
+            alert.setContentText(message);
+            alert.setHeaderText(Client.resourceFactory.getResources().getString(type.name().toLowerCase()));
+            alert.setTitle(Client.resourceFactory.getResources().getString(type.name().toLowerCase()));
+
+            alert.showAndWait();
+        });
     }
 
     public ServerDTO<City> blockGetAnswer() {
         ReentrantReadWriteLock.ReadLock readLock = listener.getLock().readLock();
         ServerDTO<City> serverDTO;
         long currentTime = System.currentTimeMillis();
+        this.listener.cleanQueue();
 
         do {
             readLock.lock();

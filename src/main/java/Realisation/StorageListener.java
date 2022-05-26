@@ -31,6 +31,10 @@ public class StorageListener extends Listener<City> {
         return this.answersQueue.poll();
     }
 
+    public void cleanQueue() {
+        this.answersQueue.clear();
+    }
+
     @Override
     public void run() {
         try (ByteArrayOutputStream concatenator = new ByteArrayOutputStream()) {
@@ -55,8 +59,6 @@ public class StorageListener extends Listener<City> {
                     } else {
                         writeLock.lock();
                         this.getController().updateContents(serverDTO.getCollection());
-
-                        //TODO REGISTER - LOGIN ЛОМАЕТ ВСЁ.
                     }
                     writeLock.unlock();
                 } catch (InputException.ServerUnavailableException e) {
