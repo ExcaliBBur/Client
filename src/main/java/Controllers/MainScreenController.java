@@ -68,7 +68,6 @@ public class MainScreenController extends StorageController<City> {
     @FXML
     private TableView<City> objectTable;
 
-
     @FXML
     private TableView<City> contentTable;
 
@@ -637,44 +636,47 @@ public class MainScreenController extends StorageController<City> {
 
     @FXML
     private void doSomething() {
-        RadioButton rb = (RadioButton) commandGroup.getSelectedToggle();
+        if (!this.isWaiting()) {
+            new Thread(() -> {
+                this.setWaiting(true);
+                RadioButton rb = (RadioButton) commandGroup.getSelectedToggle();
 
-        if (rb != null) {
-            IFormer<City> iFormer = () -> {
-                try {
-                    City object = new City();
-                    object.setInputName(this.nameInput.getText());
-                    object.setCoordinates(new City.Coordinates());
-                    object.getCoordinates().setInputFirstCoordinates(this.xInput.getText());
-                    object.getCoordinates().setInputSecondCoordinates(this.yInput.getText());
-                    object.setInputArea(this.areaInput.getText());
-                    object.setInputPopulation(this.populationInput.getText());
-                    object.setInputMeters(this.metersInput.getText());
-                    object.setInputClimate(this.climateInput.getText());
-                    object.setInputGovernment(this.governmentInput.getText());
-                    object.setInputStandardOfLiving(this.standardOfLivingInput.getText());
-                    object.setGovernor(new City.Human());
-                    object.getGovernor().setInputHumanName(this.humanNameInput.getText());
-                    return object;
-                } catch (InputException e) {
-                    alert(e.getMessage(), Alert.AlertType.ERROR);
-                }
-                return null;
-            };
+                if (rb != null) {
+                    IFormer<City> iFormer = () -> {
+                        try {
+                            City object = new City();
+                            object.setInputName(this.nameInput.getText());
+                            object.setCoordinates(new City.Coordinates());
+                            object.getCoordinates().setInputFirstCoordinates(this.xInput.getText());
+                            object.getCoordinates().setInputSecondCoordinates(this.yInput.getText());
+                            object.setInputArea(this.areaInput.getText());
+                            object.setInputPopulation(this.populationInput.getText());
+                            object.setInputMeters(this.metersInput.getText());
+                            object.setInputClimate(this.climateInput.getText());
+                            object.setInputGovernment(this.governmentInput.getText());
+                            object.setInputStandardOfLiving(this.standardOfLivingInput.getText());
+                            object.setGovernor(new City.Human());
+                            object.getGovernor().setInputHumanName(this.humanNameInput.getText());
+                            return object;
+                        } catch (InputException e) {
+                            alert(e.getMessage(), Alert.AlertType.ERROR);
+                        }
+                        return null;
+                    };
 
-            try {
-                City city = iFormer.formObj();
+                    try {
+                        City city = iFormer.formObj();
 
-                if (city != null) {
-                    String defaultName = Client.resourceFactory.getLocale(rb.getText(), new ResourceDefault());
-                    byte[] data;
-                    if (defaultName.equals("edit")) {
-                        int id = this.contentTable.getSelectionModel().getSelectedIndex();
-                        data = this.transformData("update", new ArrayList<>(Arrays.asList(Integer
-                                .toString(this.getCollection().get(id).getId()), Serializer.serialize(city))));
-                    } else {
-                        data = this.transformData(defaultName, Arrays.asList(Serializer.serialize(city)));
-                    }
+                        if (city != null) {
+                            String defaultName = Client.resourceFactory.getLocale(rb.getText(), new ResourceDefault());
+                            byte[] data;
+                            if (defaultName.equals("edit")) {
+                                int id = this.contentTable.getSelectionModel().getSelectedIndex();
+                                data = this.transformData("update", new ArrayList<>(Arrays.asList(Integer
+                                        .toString(this.getCollection().get(id).getId()), Serializer.serialize(city))));
+                            } else {
+                                data = this.transformData(defaultName, Arrays.asList(Serializer.serialize(city)));
+                            }
 
                             this.getSender().sendResponse(data);
                             ServerDTO<City> serverDTO = this.blockGetAnswer();
