@@ -12,7 +12,7 @@ public class HashPassword implements IHasher {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedHash = digest.digest(originalString.getBytes(StandardCharsets.UTF_8));
-            return new String(encodedHash).trim();
+            return new String(encodedHash, StandardCharsets.UTF_8).trim();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
