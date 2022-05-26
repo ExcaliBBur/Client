@@ -4,6 +4,7 @@ import Exceptions.InputException;
 import Interaction.Sender;
 import Main.Client;
 import Realisation.StorageListener;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 import java.util.ListResourceBundle;
@@ -72,9 +73,9 @@ public abstract class Controller {
         } while (serverDTO == null && (System.currentTimeMillis() - currentTime < 1000));
 
         if (serverDTO == null) {
-            alert(new InputException.ServerUnavailableException().getMessage(), Alert.AlertType.ERROR);
+            alert(new InputException.ServerUnavailableException().getMessage(),
+                    Alert.AlertType.ERROR);
         }
-
         return serverDTO;
     }
 }
